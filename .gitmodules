@@ -1,0 +1,69 @@
+[submodule "home/vim/dot-vim/pack/plugins/start/ctrlp.vim"]
+	path = home/vim/dot-vim/pack/plugins/start/ctrlp.vim
+	url = https://github.com/kien/ctrlp.vim
+[submodule "home/vim/dot-vim/pack/plugins/start/tcomment_vim"]
+	path = home/vim/dot-vim/pack/plugins/start/tcomment_vim
+	url = https://github.com/tomtom/tcomment_vim
+[submodule "home/vim/dot-vim/pack/plugins/start/nerdtree"]
+	path = home/vim/dot-vim/pack/plugins/start/nerdtree
+	url = https://github.com/scrooloose/nerdtree
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-pandoc"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-pandoc
+	url = https://github.com/vim-pandoc/vim-pandoc
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-pandoc-syntax"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-pandoc-syntax
+	url = https://github.com/vim-pandoc/vim-pandoc-syntax
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-surround"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-surround
+	url = https://github.com/tpope/vim-surround.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-gitgutter"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter
+[submodule "home/vim/dot-vim/pack/plugins/start/YouCompleteMe"]
+	path = home/vim/dot-vim/pack/plugins/start/YouCompleteMe
+	url = https://github.com/Valloric/YouCompleteMe
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-easy-align"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-easy-align
+	url = https://github.com/junegunn/vim-easy-align
+[submodule "home/vim/dot-vim/pack/plugins/start/nerdtree-git-plugin"]
+	path = home/vim/dot-vim/pack/plugins/start/nerdtree-git-plugin
+	url = https://github.com/Xuyuanp/nerdtree-git-plugin
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-tmux-navigator"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-tmux-navigator
+	url = https://github.com/christoomey/vim-tmux-navigator
+[submodule "home/vim/dot-vim/pack/plugins/start/ultisnips"]
+	path = home/vim/dot-vim/pack/plugins/start/ultisnips
+	url = https://github.com/SirVer/ultisnips.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-latex"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-latex
+	url = https://github.com/vim-latex/vim-latex
+[submodule "home/tmux/dot-tmux/plugins/tmux-yank"]
+	path = home/tmux/dot-tmux/plugins/tmux-yank
+	url = https://github.com/tmux-plugins/tmux-yank
+[submodule "home/tmux/dot-tmux/plugins/tmux-copycat"]
+	path = home/tmux/dot-tmux/plugins/tmux-copycat
+	url = https://github.com/tmux-plugins/tmux-copycat
+[submodule "home/tmux/dot-tmux/plugins/tmux-sensible"]
+	path = home/tmux/dot-tmux/plugins/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible
+[submodule "home/tmux/dot-tmux/plugins/tmux-resurrect"]
+	path = home/tmux/dot-tmux/plugins/tmux-resurrect
+	url = https://github.com/tmux-plugins/tmux-resurrect
+[submodule "home/tmux/dot-tmux/plugins/tmux-continuum"]
+	path = home/tmux/dot-tmux/plugins/tmux-continuum
+	url = https://github.com/tmux-plugins/tmux-continuum
+[submodule "home/tmux/dot-tmux/plugins/tmux-pain-control"]
+	path = home/tmux/dot-tmux/plugins/tmux-pain-control
+	url = https://github.com/tmux-plugins/tmux-pain-control
+[submodule "home/mutt/dot-mutt/mutt-colors-solarized"]
+	path = home/mutt/dot-mutt/mutt-colors-solarized
+	url = https://github.com/altercation/mutt-colors-solarized.git
+[submodule "home/zsh/dot-zfunctions/pure"]
+	path = home/zsh/dot-zfunctions/pure
+	url = https://github.com/sindresorhus/pure
+[submodule "home/fonts/dot-fonts/source-code-pro"]
+	path = home/fonts/dot-fonts/source-code-pro
+	url = https://github.com/adobe-fonts/source-code-pro.git
+[submodule "home/st/.config/st/st"]
+	path = home/st/.config/st/st
+	url = https://git.suckless.org/st

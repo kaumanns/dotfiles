@@ -1,0 +1,8 @@
+! Natural scrolling (works with mtrack touchpad driver)
+pointer = 1 2 3 5 4 7 6 8 9 10 11 12
+
+! Alt Gr as Compose key
+keycode 108 = Multi_key
+
+! Disable Caps Lock
+remove Lock = Caps_Lock

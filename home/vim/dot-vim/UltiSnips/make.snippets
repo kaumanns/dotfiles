@@ -1,0 +1,31 @@
+snippet make
+SHELL  := bash
+
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+.DELETE_ON_ERROR:
+
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+
+# Basic macros
+TIME   := echo "---" && time
+SILENT := @
+
+# Imbue Perl's I/O channels with utf8.
+PERL_BEGIN := BEGIN { use utf8; use warnings; use strict; binmode(STDIN, ":encoding(UTF-8)"); binmode(STDOUT, ":encoding(UTF-8)"); binmode(STDERR, ":encoding(UTF-8)") }
+
+# Enable second variable expansion.
+.SECONDEXPANSION:
+
+# Enable retention of intermediate files.
+.SECONDARY:
+
+all: out
+.PHONY: all
+
+clean:
+	rm -rf tmp
+	rm -rf out
+.PHONY: clean
+endsnippet

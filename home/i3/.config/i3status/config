@@ -1,0 +1,96 @@
+general {
+        colors = true
+        interval = 5
+}
+
+order += "ipv6"
+order += "run_watch DHCP"
+order += "run_watch VPNC"
+order += "path_exists VPN"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "battery 0"
+order += "cpu_temperature 0"
+order += "memory"
+order += "disk /"
+order += "load"
+order += "tztime local"
+order += "tztime berlin"
+order += "volume master"
+
+wireless _first_ {
+        format_up = "WLAN=%ip (%quality at %essid, %bitrate)"
+        format_down = "WLAN=-"
+}
+
+ethernet _first_ {
+        format_up = "ETH=%ip (%speed)"
+        format_down = "ETH=-"
+}
+
+battery 0 {
+        # format = "%status %percentage %remaining %emptytime"
+        format = "BAT=%percentage/%status"
+        format_down = "BAT=NONE"
+        status_chr = "↑"
+        status_bat = "↓"
+        status_unk = "?"
+        status_full = "→"
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+run_watch DHCP {
+        pidfile = "/var/run/dhclient*.pid"
+}
+
+run_watch VPNC {
+        # file containing the PID of a vpnc process
+        pidfile = "/var/run/vpnc/pid"
+}
+
+path_exists VPN {
+        # path exists when a VPN tunnel launched by nmcli/nm-applet is active
+        path = "/proc/sys/net/ipv4/conf/tun0"
+}
+
+tztime local {
+        format = "%Y-%m-%d %H:%M:%S"
+        hide_if_equals_localtime = true
+}
+
+tztime berlin {
+        format = "%Y-%m-%d %H:%M"
+        timezone = "Europe/Berlin"
+}
+
+load {
+        format = "LOAD=%5min"
+}
+
+cpu_temperature 0 {
+        format = "TEMP=%degrees°"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input"
+}
+
+memory {
+        format = "RAM=%used/%total"
+        threshold_degraded = "10%"
+        format_degraded = "RAM=%free"
+}
+
+disk "/" {
+        format = "DISK=%free"
+}
+
+read_file uptime {
+        path = "/proc/uptime"
+}
+
+volume master {
+	format = "♪:%volume"
+	format_muted = "♪:%volume"
+	device = "default"
+	mixer = "Master"
+	mixer_idx = 0
+ }

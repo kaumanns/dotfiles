@@ -1,0 +1,309 @@
+" Instructions for profiling in order to detect naughty plugins:
+"
+" :profile start profile.log
+" :profile func *
+" :profile file *
+" (Do slow things)
+" :profile pause
+" :noautocmd qall!
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Youcompleteme
+
+let g:ycm_filetype_blacklist = {}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/airblade/vim-gitgutter
+
+" Important commands:
+" :GitGutterToggle
+" :GitGutterSignsToggle
+" :GitGutterLineHighlightsToggle
+
+let g:gitgutter_max_signs = 500
+
+let g:gitgutter_sign_added = '\'
+let g:gitgutter_sign_modified = '|'
+let g:gitgutter_sign_removed = '/'
+let g:gitgutter_sign_removed_first_line = '‾'
+let g:gitgutter_sign_modified_removed = '|'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/SirVer/ultisnips
+
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+
+" let g:UltiSnipsExpandTrigger="<c-l>"
+
+" Make Ultisnips work with YouCompleteMe:
+
+function! g:UltiSnips_Complete()
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
+    endif
+  endif
+  return ""
+endfunction
+
+function! g:UltiSnips_Reverse()
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
+  endif
+
+  return ""
+endfunction
+
+if !exists("g:UltiSnipsJumpForwardTrigger")
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+endif
+
+if !exists("g:UltiSnipsJumpBackwardTrigger")
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+endif
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tmux integration
+" https://github.com/christoomey/vim-tmux-navigator
+
+let g:tmux_navigator_no_mappings = 1
+let g:tmux_navigator_save_on_switch = 1
+
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/kien/ctrlp.vim
+
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+" Use the nearest .git directory as the cwd
+" This makes a lot of sense if you are working on a project that is in version
+" control. It also supports works with .svn, .hg, .bzr.
+let g:ctrlp_working_path_mode = 'ra'
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe " Windows
+
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
+" Make Ctrl-P a lot faster for Git projects
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+let g:ctrlp_use_caching = 0
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/vim-pandoc/vim-pandoc
+" https://github.com/vim-pandoc/vim-pandoc-syntax
+" https://github.com/vim-pandoc/vim-pandoc/blob/master/doc/pandoc.txt
+
+" Set default for spell checking
+let g:pandoc#spell#enabled = 1
+let g:pandoc#spell#default_langs = [ 'de', 'en' ]
+
+" To avoid the continuous recomputation of folds, in particular in insert mode, defer it to the switches between insert and normal mode.
+let g:pandoc#folding#fastfolds = 1
+let g:pandoc#folding#fold_yaml = 1
+let g:pandoc#folding#level = 1
+let g:pandoc#folding#mode = 'syntax' " syntax, stacked, relative
+
+let g:pandoc#syntax#conceal#use = 0
+
+" au BufNewFile,BufRead *.md set filetype=pandoc
+" au BufNewFile,BufRead *.md set syntax=pandoc
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/preservim/nerdtree
+" https://github.com/Xuyuanp/nerdtree-git-plugin
+
+nnoremap <leader>d :NERDTreeToggle<CR>
+
+" Open a NERDTree automatically when vim starts up if no files were specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" Close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+let g:NERDTreeDirArrows=1
+let g:NERDTreeShowHidden=1
+let g:NERDTreeRespectWildIgnore=1
+let g:NERDTreeCaseSensitiveSort=1
+let g:NERDTreeMouseMode=3
+let g:NERDTreeSize=25
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/junegunn/vim-easy-align
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/vim-latex/vim-latex
+
+" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
+" 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
+" The following changes the default filetype back to 'tex':
+let g:tex_flavor='latex'
+
+" TIP: if you write your \label's as \label{fig:something}, then if you
+" type in \ref{fig: and press <C-n> you will automatically cycle through
+" all the figure labels. Very useful!
+set iskeyword+=:
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Color
+" https://github.com/altercation/vim-colors-solarized
+" (needs ~/.vim/colors/solarized.vim)
+
+" Makes the colorscheme work on terminals with transparent background, such as Blink.
+let g:solarized_termtrans=1
+
+syntax enable " Enable sytnax highlighting
+set background=dark
+colorscheme solarized
+
+" Fix git-gutter's sign column contrast issue with dark solarized
+highlight clear SignColumn
+
+" Get rid of vertical split lines
+hi vertsplit ctermbg=NONE ctermfg=black term=NONE guifg=black guibg=NONE
+
+" Make the 81st column stand out
+" For dark color scheme:
+highlight ColorColumn ctermbg=8
+call matchadd('ColorColumn', '\%81v', 100)
+" " For light color scheme:
+" highlight ColorColumn ctermbg=7
+" call matchadd('ColorColumn', '\%81v', 0)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Misc
+
+set nocompatible " be iMproved, required
+
+" Enable file type detection
+filetype plugin on
+filetype plugin indent on
+
+set autoread
+set encoding=utf-8
+set history=1000 " remember more commands and search history
+set mouse=a
+set nobackup
+set noswapfile
+set undolevels=1000 " use many muchos levels of undo
+set wildignore+=*.swp,*.bak,*.pyc,*.class,*.git*,*.hg*,*.svn*,*/.DS_Store
+
+set nospell
+" set spell spelllang=en_us
+" set spell spelllang=de_de
+
+" Use yank and paste for clipboard content.
+" Unnamed for primary selection buffer (middle-mouse), unnamedplus for clipboard buffer (ctrl-v)
+set clipboard=unnamed,unnamedplus
+
+" Extend runtimepath
+set rtp+=~/.fzf
+
+set virtualedit=all
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Indentation and whitespace
+
+set autoindent
+set backspace=indent,eol,start
+set copyindent
+set expandtab " always uses spaces instead of tab characters
+set shiftround
+set shiftwidth=2
+set smarttab " make tab insert indents instead of tabs at the beginning of a line
+set softtabstop=2
+set tabstop=2
+
+autocmd FileType make setlocal noexpandtab
+
+" Remove trailing whitespaces at write
+autocmd BufWritePre * :%s/\s\+$//e
+
+" keep visual selection when reindenting
+xnoremap > >gv
+xnoremap < <gv
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" User interface
+
+" set cursorline " highlight current line
+set laststatus=2 " make status line appear even without split
+set noerrorbells " don't beep
+" set noshowmode " disable default mode indicator
+set number " show line numbers
+set showmatch " highlight matching [{()}]
+set title " change the terminal's title
+set visualbell " don't beep
+set wildmenu " visual autocomplete for command menu
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Folding
+
+set foldcolumn=0
+set foldenable " enable folding
+set foldlevelstart=10 " open most folds by default
+set foldnestmax=10 " 10 nested fold max
+" set foldmethod=indent " fold based on indent level
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Search
+
+set noincsearch " don't search as characters are entered
+" set hlsearch " highlight matches
+
+" Clear the search buffer
+nmap <silent> <leader>/ :noh<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Disable arrow keys and pageup/pagedown keys
+
+" nnoremap <up> <nop>
+" nnoremap <down> <nop>
+" nnoremap <left> <nop>
+" nnoremap <right> <nop>
+"
+" inoremap <up> <nop>
+" inoremap <down> <nop>
+" inoremap <left> <nop>
+" inoremap <right> <nop>
+"
+" vnoremap <up> <nop>
+" vnoremap <down> <nop>
+" vnoremap <left> <nop>
+" vnoremap <right> <nop>
+
+nnoremap <pageup> <nop>
+nnoremap <pagedown> <nop>
+
+inoremap <pageup> <nop>
+inoremap <pagedown> <nop>
+
+vnoremap <pageup> <nop>
+vnoremap <pagedown> <nop>

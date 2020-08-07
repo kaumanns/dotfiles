@@ -1,0 +1,196 @@
+################################################################################
+# Plugins
+
+source "$HOME/.zfunctions/vi-mode.plugin.zsh"
+source "$HOME/.zfunctions/history-search-end.plugin.zsh"
+
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+
+bindkey "^K" history-beginning-search-backward-end
+bindkey "^J" history-beginning-search-forward-end
+
+bindkey "\e[A" history-beginning-search-backward
+bindkey "\e[B" history-beginning-search-forward
+
+################################################################################
+# Pure theme
+
+# Installation:
+# 1. mkdir $HOME/.zfunctions
+# 2. git clone https://github.com/sindresorhus/pure $HOME/.zfunctions/pure
+# 3. Symlink scripts:
+#   - ln -s "$HOME/.zfunctions/pure/pure.zsh" "$HOME/.zfunctions/prompt_pure_setup"
+#   - ln -s "$HOME/.zfunctions/pure/async.zsh" "$HOME/.zfunctions/async"
+
+fpath=( "$HOME/.zfunctions" $fpath )
+
+autoload -U promptinit; promptinit
+
+[[ $COLORTERM = *(24bit|truecolor)* ]] || zmodload zsh/nearcolor
+zstyle :prompt:pure:prompt:success color '#5faf00'
+zstyle :prompt:pure:prompt:error color '#dc322f'
+
+zstyle :prompt:pure:git:stash show yes
+
+export PURE_PROMPT_SYMBOL="$"
+export PURE_PROMPT_VICMD_SYMBOL="V"
+
+prompt pure
+
+################################################################################
+# History
+
+HISTFILE=~/.zsh_history     #Where to save history to disk
+
+HISTSIZE=1000000               #How many lines of history to keep in memory
+SAVEHIST=1000000               #Number of history entries to save to disk
+
+HISTDUP=erase               # Erase duplicates in the history file
+
+setopt append_history # Allow multiple terminal sessions to all append to one zsh command history
+setopt extended_history # save timestamp of command and duration
+setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
+setopt hist_find_no_dups # When searching history don't display results already cycled through twice
+setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
+setopt hist_ignore_space # remove command line from history list when first character on the line is a space
+setopt hist_reduce_blanks # Remove extra blanks from each command line being added to history
+setopt hist_verify # don't execute, just expand history
+setopt inc_append_history # Add comamnds as they are typed, don't wait until shell exit
+setopt share_history # imports new commands and appends typed commands to history
+
+################################################################################
+# Options
+
+setopt always_to_end # When completing from the middle of a word, move the cursor to the end of the word
+setopt auto_menu # show completion menu on successive tab press. needs unsetop menu_complete to work
+setopt complete_in_word # Allow completion from within a word/phrase
+setopt prompt_subst # Enable parameter expansion, command substitution, and arithmetic expansion in the prompt
+
+unsetopt beep
+unsetopt menu_complete # do not autoselect the first completion entry
+
+# autoload -U compinit && compinit
+# zstyle ':completion:*' completer _complete
+
+zstyle ':completion:*' menu yes select # Launch selection menu with tab
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*' # Case-insensitive completion, partial word completion, substring completion
+
+################################################################################
+# Environment variables
+
+export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.local/bin:$PATH"
+
+export UNAME=`uname`
+export HOSTNAME=`hostname`
+
+export MAIL="$HOME/.mail"
+export EDITOR="nvim"
+export PAGER="less"
+export SSH_KEY_PATH="$HOME/.ssh/id_rsa.pub"
+
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export KEYTIMEOUT=1
+
+################################################################################
+# Aliases
+
+alias r="ranger"
+alias m="cd ~/Downloads && neomutt"
+alias v="nvim"
+alias h="history 1 | grep"
+alias ssh="autossh -M 0"
+alias prettyjson='python -m json.tool'
+
+alias l="ls"
+alias ll="ls -lh"
+alias lt="ls -lhrt"
+alias la="ls -lha"
+alias ls="ls --color=auto"
+
+alias gs='git status '
+alias ga='git add '
+alias gb='git branch '
+alias gc='git commit'
+alias gd='git diff'
+alias go='git checkout '
+
+################################################################################
+# Functions
+
+# Cat with syntax highlighting
+function dog () {
+    highlight -O ansi $([[ ! -z "$1" ]] && echo -n "$1");
+}
+
+# Less with syntax highlighting
+function more () {
+    dog $([[ ! -z "$1" ]] && echo -n "$1") | less -r;
+}
+
+# Tmux quickstart
+function tm {
+    [[ -z "$1" ]] && echo "Usage: $0 <session name>" && return 1;
+    tmux attach -t "$1" || tmux new -s "$1";
+}
+
+eval `dircolors $HOME/.dircolors/dircolors.256dark`
+
+################################################################################
+# Darwin stuff
+
+if [[ "$UNAME" == "Darwin" ]]; then
+    # Homebrew
+    export HOMEBREW_NO_ANALYTICS=1
+
+    # Use GNU utils (install with brew install coreutils)
+    # Without these paths, one would have to prefix all GNU commands with 'g'.
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+    # Prolog
+    export PATH="/Applications/SWI-Prolog.app/Contents/MacOS:$PATH"
+
+    # GPG agent
+    # From https://blog.chendry.org/2015/03/13/starting-gpg-agent-in-osx.html:
+    # The --write-env-file argument to gpg-agent produces a file that can be executed by a script to set the GPG_AGENT_INFO environment variable.
+    # Whenever we start gpg-agent, we tell it to write this to ~/.gpg-agent-info so that subsequent shells can source it, thus setting the environment variable.
+    # However, we also need to test that the daemon is still up and running. To do so, we use bash’s parameter expansion to isolate the full path to the socket file, and then test that it currently exists as a socket. If it does exist is a socket, we know that instance of gpg-agent is still running, so we export the environment variable and we’re done.
+    # If gpg-agent is not running, we start it. In this case, our invocation of gpg-agent outputs a script to set and export GPG_AGENT_INFO, so we can simply eval it.
+    [ -f ~/.gpg-agent-info ] && source ~/.gpg-agent-info
+    if [ -S "${GPG_AGENT_INFO%%:*}" ]; then
+        export GPG_AGENT_INFO
+    else
+        eval $( gpg-agent --daemon 2>/dev/null )
+        # --write-env-file ~/.gpg-agent-info )
+    fi
+
+    # Android SDK
+	if [ -d "$HOME/adb-fastboot/platform-tools" ] ; then
+        export PATH="$HOME/adb-fastboot/platform-tools:$PATH"
+    fi
+
+elif [[ "$UNAME" == "Linux" ]]; then
+    if [ -n "$DISPLAY" ]; then
+        xset b off
+    fi
+
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/home/david/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/david/miniconda3/etc/profile.d/conda.sh" ]; then
+# . "/home/david/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+# export PATH="/home/david/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+fi
+

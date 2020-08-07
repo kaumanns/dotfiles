@@ -1,0 +1,22 @@
+defaults
+auth           on
+protocol       smtp
+tls            on
+tls_starttls   on
+tls_certcheck  on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+account        personal
+host           wirtanen.uberspace.de
+port           587
+user           metta@wirtanen.uberspace.de
+passwordeval   pass mail
+
+account        work
+host           mailrelay.unibw.de
+port           587
+user           i71bdaka
+passwordeval   pass mail.unibw
+
+account default : personal

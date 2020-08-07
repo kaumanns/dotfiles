@@ -1,0 +1,128 @@
+source ~/.mutt/solarized-dark-256.neomuttrc
+
+source ~/.mutt/work.muttrc
+source ~/.mutt/personal.muttrc
+
+folder-hook work/* source ~/.mutt/work.muttrc
+folder-hook personal/* source ~/.mutt/personal.muttrc
+
+auto_view text/html
+alternative_order text/html text/plain text/enriched
+
+# timeout-hook 'exec sync-mailbox'
+# startup-hook notmuch zeuch
+# shutdown-hook
+
+# mailboxes `find ~/.mail/ -type d -name cur | sort | sed -e 's:/cur/*$::' -e 's/ /\\ /g' | tr '\n' ' '`
+
+################################################################################
+# Settings
+
+set collapse_unread = no
+set date_format = "%m/%d %H:%M" # default: '!%a, %b %d, %Y at %I:%M:%S%p %Z'
+set edit_headers = yes
+set editor = "nvim +':set textwidth=0' +':set wrapmargin=0' +':set wrap'
+set index_format = "%3C %Z %D %-5.5c %-20.20L %s"
+set mailcap_path = "~/.mutt/mailcap"
+set markers = no
+set new_mail_command = "notify-send 'New Email' '%n new messages, %u unread.' &"
+set query_command = "mu cfind --format=mutt-ab '%s'"
+set send_charset = utf-8
+set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
+set sidebar_visible = yes
+set sidebar_width = 20
+set sleep_time = 0
+set timeout = 1
+set sort = threads
+set sort_aux = reverse-date-received
+set sort_browser = reverse-date
+set strict_threads = yes
+set use_envelope_from = yes
+set use_from = yes
+set wrap = 0
+
+# WARNING: khard is currently broken for unparsable contact cards. When fixed, use this:
+# set query_command = "( khard email --parsable '%s' | sed -n '1!p'; mu cfind --format=mutt-ab '%s' )"
+
+################################################################################
+# Bindings
+
+# Requirement for Neomutt
+bind index g noop
+bind pager g noop
+
+bind index p recall-message
+bind index,pager N search-opposite
+bind index gg first-entry
+bind index G last-entry
+bind index R group-reply
+bind index <tab> sync-mailbox
+bind index <space> collapse-thread
+
+bind pager gg top
+bind pager G bottom
+bind pager R group-reply
+bind pager k previous-line
+bind pager j next-line
+bind pager h previous-entry
+bind pager l next-entry
+
+bind editor <Tab> complete-query
+bind editor ^T complete
+
+bind compose p postpone-message
+
+# Sidebar
+bind index,pager \CP sidebar-prev
+bind index,pager \CN sidebar-next
+bind index,pager \CO sidebar-open
+
+# View attachments with `v` (view) and then `m` (or `return`) (send to mailcap):
+bind attach <return> view-mailcap
+
+################################################################################
+# Macros
+
+macro index,pager A \
+    "<pipe-message>khard add-email<return>" \
+    "Add the sender email address to khard"
+
+macro index o \
+    "<shell-escape>mbsync --all<enter>" \
+    "Sync maildir"
+
+macro index,pager C \
+    "<copy-message>?<toggle-mailboxes>" \
+    "Copy a message to a mailbox"
+
+macro index,pager M \
+    "<save-message>?<toggle-mailboxes>" \
+    "Move a message to a mailbox"
+
+macro index A \
+    "<modify-labels>+archive -unread -inbox\\n" \
+    "Archive message"
+
+macro index \\\\ \
+    "<vfolder-from-query>" \
+    "Search mailbox"
+
+macro index L \
+    "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" \
+    "Show only messages matching a notmuch pattern"
+
+macro index i \
+		"<limit>(~N|~F)<Enter>" \
+		"View new/flagged messages"
+
+macro index a \
+    "<limit>all\n" \
+    "Show all messages (undo limit)"
+
+macro index,pager \Cu \
+    "<pipe-message> urlscan<enter>" \
+    "Extract URLs"
+
+macro attach,compose \Cu \
+    "<pipe-entry> urlscan<enter>" \
+    "Extract URLs"

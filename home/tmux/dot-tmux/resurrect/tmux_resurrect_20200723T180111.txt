@@ -1,0 +1,4 @@
+pane	0	0	:zsh	1	:*	0	:/home/david/git/st	0	zsh	:
+pane	0	0	:zsh	1	:*	1	:/home/david	1	zsh	:
+window	0	0	1	:*	dfc5,161x55,0,0{80x55,0,0,0,80x55,81,0,1}
+state	0	

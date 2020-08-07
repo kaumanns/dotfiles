@@ -1,0 +1,119 @@
+snippet fig
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.75\textwidth]{$2}
+	\caption{
+
+	}
+	\label{fig:$1}
+\end{figure}
+endsnippet
+
+
+snippet figs
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[ht]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{$2}
+		\caption{
+
+		}
+		\label{fig:$1}
+	\end{subfigure}
+	\begin{subfigure}[ht]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{$2}
+		\caption{
+
+		}
+		\label{fig:$1}
+	\end{subfigure}
+	\caption{
+
+	}
+	\label{fig:}
+	\end{figure}
+endsnippet
+
+
+snippet tab
+\begin{table}
+	\begingroup
+	\setlength{\tabcolsep}{10pt}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\begin{tabular}{ l | l l }
+		$2 &  &  \\\
+		\hline
+		&  &  \\\
+	\end{tabular}
+	\caption{
+
+	}
+	\label{tab:$1}
+	\endgroup
+\end{table}
+endsnippet
+
+
+snippet equ
+\begin{equation}
+	\begin{split}
+		$2 &= $3
+	\end{split}
+	\label{equ:$1}
+\end{equation}
+endsnippet
+
+
+snippet def
+\begin{definition}[$1]
+	$2
+	\label{def:$3}
+\end{definition}
+endsnippet
+
+
+snippet beg
+\begin{$1}
+	$2
+\end{$1}
+endsnippet
+
+
+snippet item
+\begin{itemize}
+	\item $1
+\end{itemize}
+endsnippet
+
+
+snippet lesson
+---
+title: $1
+subtitle: Natural Language Processing
+author: Dr. David Kaumanns
+institute Universität der Bundeswehr München
+date: Autumn 2020
+---
+
+$2
+================================================================================
+
+$3
+--------------------------------------------------------------------------------
+
+Conclusion
+================================================================================
+
+Summary
+--------------------------------------------------------------------------------
+
+Exercise
+--------------------------------------------------------------------------------
+
+Further Reading
+--------------------------------------------------------------------------------
+
+References
+--------------------------------------------------------------------------------
+endsnippet

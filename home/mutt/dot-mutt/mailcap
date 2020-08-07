@@ -1,0 +1,34 @@
+# MS Office
+# application/vnd.ms-excel;
+# application/vnd.openxmlformats-officedocument.presentationml.presentation;
+application/msword; pandoc --from docx --to markdown %s; copiousoutput;
+application/vnd.ms-excel.sheet.macroenabled.12; libreoffice %s &;
+
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; pandoc --from docx --to markdown %s; copiousoutput;
+
+# OpenOffice/LibreOffice
+application/vnd.oasis.opendocument.text; pandoc --from odt --to markdown %s; copiousoutput;
+
+# PDFs
+application/pdf; evince %s &; test=test -n "$DISPLAY";
+application/pdf; pdftotext -layout %s - &; copiousoutput;
+
+# Images
+image/*; feh %s; test=test -n "$DISPLAY";
+image/*; ~/.mutt/imagetow3m.sh %s; test=test -n "$DISPLAY";
+image/*; ~/.mutt/imagetoascii.sh %s;
+# image/*;  (anytopnm %s | pnmscale -xysize 80 46 | ppmtopgm | pgmtopbm | pbmtoascii -1x2 ) 2>&1 ; copiousoutput
+
+# HTML
+text/html; w3m -I %{charset} -T text/html -cols 9999 -o display_link_number=1; copiousoutput;
+
+# Text
+text/*; less; copiousoutput;
+
+application/ics; khal import -a logistics %s
+text/calendar; khal import -a logistics %s
+
+# # Unidentified files
+# application/octet-stream;
+
+#video/*;        xanim %s > /dev/null
