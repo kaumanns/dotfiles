@@ -23,44 +23,64 @@ PIP := pip3
 STOW := stow
 STOW_DIR := home
 
+# INSTALL_CMD := sudo apt install -y
+INSTALL_CMD := sudo pacman --needed --noconfirm -Sy
+
 ################################################################################
 # Functions
 
 dirs = $(shell ls $(1))
-package-install = sudo apt install -y $(1)
+package-install = $(INSTALL_CMD) $(1)
 pip-install = $(PIP) install --upgrade --user $(1)
-stow = $(STOW) --verbose 1 --dotfiles --dir $(STOW_DIR) --target $(1) $(2)
+stow = $(STOW) --restow --verbose 1 --dotfiles --dir $(STOW_DIR) --target $(1) $(2)
+
+STOW_SUBDIRS = $(call dirs,$(STOW_DIR))
 
 ################################################################################
 # User config
 
+default: stow
+.PHONY: default
+
 include config.mk
 
 ################################################################################
-# Helper targets
+# Hooks
 
-REQUIRED_PACKAGES = stow git python3-pip
-
-init: install
-	$(GIT) submodule update --init --recursive
-.PHONY: init
+REQUIRED_PACKAGES = stow git python3
 
 install:
 	$(call package-install,$(REQUIRED_PACKAGES))
 .PHONY: install
 
+init: | install
+	$(GIT) submodule update --init --recursive
+.PHONY: init
+
 # NOTE: Not doing recursive update because it breaks dependencies managed by submodules.
-update:
-	$(GIT) submodule update --remote
-	$(GIT) submodule foreach '$(GIT) checkout master && $(GIT) pull'
+update: update-submodules | init
+	$(MAKE) $(if $(updateable),$(addsuffix .setup,$(updateable)))
 .PHONY: update
 
+update-submodules:
+	$(GIT) submodule update --remote
+	$(GIT) submodule foreach '$(GIT) checkout master && $(GIT) pull'
+.PHONY: update-submodules
+
+stow: $(addsuffix .stow,$(STOW_SUBDIRS)) | update
+.PHONY: stow
+
 ################################################################################
-# Generic targets
+# Methods
 
 %.stow:
 	$(call stow,~,$*)
 	$(MAKE) $*.setup
+
+# TODO
+# %.root:
+# 	sync
+# 	$(call stow,/,$*)
 
 %.package-install:
 	$(call package-install,$*)
@@ -76,12 +96,7 @@ $1.setup: $$($1.prerequisites) | $$($1.order-only-prerequisites) $$(addsuffix .p
 	$$($1.setup-recipe)
 endef
 
+$(foreach dir,$(STOW_SUBDIRS),$(eval $(call setup_template,$(dir))))
+
 %.setup:
 	@echo "No setup instructions defined for $* -- skipping."
-
-# This generates an eval to setup_template for each directory in the source directory.
-define setup_template_template
-$(foreach dir,$(call dirs,$(STOW_DIR)),$$(eval $$(call setup_template,$(dir))))
-endef
-
-$(eval $(call setup_template_template))

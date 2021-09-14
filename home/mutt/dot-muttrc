@@ -1,19 +1,25 @@
 source ~/.mutt/solarized-dark-256.neomuttrc
 
-source ~/.mutt/work.muttrc
-source ~/.mutt/personal.muttrc
+source ~/.mutt/profiles/personal.muttrc
+source ~/.mutt/profiles/uni.muttrc
+source ~/.mutt/profiles/archive.muttrc
+source ~/.mutt/profiles/personal.muttrc
 
-folder-hook work/* source ~/.mutt/work.muttrc
-folder-hook personal/* source ~/.mutt/personal.muttrc
+send-hook . 'unset crypt_autoencrypt'
+# send-hook . 'unset pgp_autosign; unset pgp_autoencrypt'
+# send-hook '~h heinlein-hosting.de' 'unset crypt_autoencrypt'
+
+folder-hook mailbox/* source ~/.mutt/profiles/personal.muttrc
+folder-hook archive/* source ~/.mutt/profiles/archive.muttrc
+folder-hook uni/*     source ~/.mutt/profiles/uni.muttrc
 
 auto_view text/html
 alternative_order text/html text/plain text/enriched
 
-# timeout-hook 'exec sync-mailbox'
-# startup-hook notmuch zeuch
+# For some reason, timeout-hook has to be placed AFTER startup-hook for startup-hook (and possibly timeout-hook as well) in order to work.
+startup-hook 'echo `mbsync --config /home/david/.mutt/profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/profiles/notmuch.conf new`'
+timeout-hook 'echo `mbsync --config /home/david/.mutt/profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/profiles/notmuch.conf new`'
 # shutdown-hook
-
-# mailboxes `find ~/.mail/ -type d -name cur | sort | sed -e 's:/cur/*$::' -e 's/ /\\ /g' | tr '\n' ' '`
 
 ################################################################################
 # Settings
@@ -25,14 +31,13 @@ set editor = "nvim +':set textwidth=0' +':set wrapmargin=0' +':set wrap'
 set index_format = "%3C %Z %D %-5.5c %-20.20L %s"
 set mailcap_path = "~/.mutt/mailcap"
 set markers = no
-set new_mail_command = "notify-send 'New Email' '%n new messages, %u unread.' &"
 set query_command = "mu cfind --format=mutt-ab '%s'"
 set send_charset = utf-8
-set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
+set sidebar_format = "%D%?F? [%F]?%* %?N?%N/?%S"
 set sidebar_visible = yes
-set sidebar_width = 20
+set sidebar_width = 21
 set sleep_time = 0
-set timeout = 1
+set timeout = 600
 set sort = threads
 set sort_aux = reverse-date-received
 set sort_browser = reverse-date
@@ -41,8 +46,17 @@ set use_envelope_from = yes
 set use_from = yes
 set wrap = 0
 
-# WARNING: khard is currently broken for unparsable contact cards. When fixed, use this:
-# set query_command = "( khard email --parsable '%s' | sed -n '1!p'; mu cfind --format=mutt-ab '%s' )"
+# Query khard or existing email headers for email by name
+set query_command = "( khard email --parsable '%s'; mu cfind --format=mutt-ab '%s' )"
+
+################################################################################
+# Headers display
+
+ignore *
+unignore from date subject to cc user-agent
+unignore organization organisation
+unignore x-mailer: x-newsreader: x-mailing-list: x-spam-status x-spam-report
+unignore posted-to:
 
 ################################################################################
 # Bindings
@@ -70,7 +84,7 @@ bind pager l next-entry
 bind editor <Tab> complete-query
 bind editor ^T complete
 
-bind compose p postpone-message
+bind compose s postpone-message
 
 # Sidebar
 bind index,pager \CP sidebar-prev
@@ -87,10 +101,6 @@ macro index,pager A \
     "<pipe-message>khard add-email<return>" \
     "Add the sender email address to khard"
 
-macro index o \
-    "<shell-escape>mbsync --all<enter>" \
-    "Sync maildir"
-
 macro index,pager C \
     "<copy-message>?<toggle-mailboxes>" \
     "Copy a message to a mailbox"
@@ -99,16 +109,12 @@ macro index,pager M \
     "<save-message>?<toggle-mailboxes>" \
     "Move a message to a mailbox"
 
-macro index A \
-    "<modify-labels>+archive -unread -inbox\\n" \
-    "Archive message"
+# macro index A \
+#     "<modify-labels>+archive -unread -inbox\\n" \
+#     "Archive message"
 
-macro index \\\\ \
-    "<vfolder-from-query>" \
-    "Search mailbox"
-
-macro index L \
-    "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" \
+macro index S \
+    "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch --config=/home/david/.mutt/profiles/notmuch.conf search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" \
     "Show only messages matching a notmuch pattern"
 
 macro index i \
@@ -126,3 +132,22 @@ macro index,pager \Cu \
 macro attach,compose \Cu \
     "<pipe-entry> urlscan<enter>" \
     "Extract URLs"
+
+macro index o \
+    "<shell-escape>mbsync --config /home/david/.mutt/profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/profiles/notmuch.conf new<enter>" \
+    "Sync maildir"
+
+macro index <f4> \
+    "<sync-mailbox><enter-command> \
+    source ~/.mutt/profiles/personal.muttrc \
+    <enter><change-folder>!<enter>"
+
+macro index <f5> \
+    "<sync-mailbox><enter-command> \
+    source ~/.mutt/profiles/uni.muttrc \
+    <enter><change-folder>!<enter>"
+
+macro index <f6> \
+    "<sync-mailbox><enter-command> \
+    source ~/.mutt/profiles/archive.muttrc \
+    <enter><change-folder>!<enter>"

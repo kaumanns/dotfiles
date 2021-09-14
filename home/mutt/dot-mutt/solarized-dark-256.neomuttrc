@@ -11,7 +11,7 @@ color attachment default default
 color search     color7  color0
 color status     default color0
 color indicator  default color15
-color tree       color4  default
+color tree       color4  default # arrows in thread
 color warning    color1  default
 color options    color7  default
 
@@ -32,15 +32,17 @@ color index color7  default "~A" # all messages
 color index color4  default "~N" # new messages
 color index color6  default "~U" # unread messages
 color index color5  default "~F" # flagged messages
-color index color1  default "~D" # deleted messages
 color index color3  default "~T" # tagged messages
+color index default default "~P" # messages from me
+color index color1  default "~D(!~P|~P)" # deleted messages
+color index color6  default "~U(!~P|~P)" # new messages
 
 # Sidebar colors
 color sidebar_ordinary  default default
 color sidebar_divider   default default
-color sidebar_new       default default
-color sidebar_indicator default color0
-color sidebar_unread    color6 default
+color sidebar_new       color6 default
+color sidebar_indicator default color15
+color sidebar_unread    default default
 
 # Message header colors
 

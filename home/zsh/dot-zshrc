@@ -70,7 +70,7 @@ setopt prompt_subst # Enable parameter expansion, command substitution, and arit
 unsetopt beep
 unsetopt menu_complete # do not autoselect the first completion entry
 
-# autoload -U compinit && compinit
+autoload -U compinit && compinit
 # zstyle ':completion:*' completer _complete
 
 zstyle ':completion:*' menu yes select # Launch selection menu with tab
@@ -97,6 +97,13 @@ export KEYTIMEOUT=1
 
 ################################################################################
 # Aliases
+
+alias o="firefox"
+
+alias sy="surfraw youtube -browser=firefox"
+alias sd="surfraw duckduckgo -browser=firefox"
+alias sw="surfraw wikipedia -browser=firefox"
+alias sl="surfraw leodict -browser=firefox"
 
 alias r="ranger"
 alias m="cd ~/Downloads && neomutt"
@@ -138,6 +145,9 @@ function tm {
 }
 
 eval `dircolors $HOME/.dircolors/dircolors.256dark`
+
+# Enable Tor
+#. torsocks on
 
 ################################################################################
 # Darwin stuff

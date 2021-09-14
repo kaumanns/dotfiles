@@ -55,15 +55,42 @@
 [submodule "home/tmux/dot-tmux/plugins/tmux-pain-control"]
 	path = home/tmux/dot-tmux/plugins/tmux-pain-control
 	url = https://github.com/tmux-plugins/tmux-pain-control
-[submodule "home/mutt/dot-mutt/mutt-colors-solarized"]
-	path = home/mutt/dot-mutt/mutt-colors-solarized
-	url = https://github.com/altercation/mutt-colors-solarized.git
-[submodule "home/zsh/dot-zfunctions/pure"]
-	path = home/zsh/dot-zfunctions/pure
-	url = https://github.com/sindresorhus/pure
 [submodule "home/fonts/dot-fonts/source-code-pro"]
 	path = home/fonts/dot-fonts/source-code-pro
 	url = https://github.com/adobe-fonts/source-code-pro.git
 [submodule "home/st/.config/st/st"]
 	path = home/st/.config/st/st
 	url = https://git.suckless.org/st
+[submodule "home/hosts/.config/hosts/hosts"]
+	path = home/hosts/.config/hosts/hosts
+	url = https://github.com/StevenBlack/hosts.git
+[submodule "home/firefox/.mozilla/user.js"]
+	path = home/firefox/.mozilla/user.js
+	url = https://github.com/arkenfox/user.js.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-repeat"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-repeat
+	url = https://github.com/tpope/vim-repeat.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-pandoc-after"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-pandoc-after
+	url = https://github.com/vim-pandoc/vim-pandoc-after.git
+[submodule "home/vim/dot-vim/pack/plugins/start/FastFold"]
+	path = home/vim/dot-vim/pack/plugins/start/FastFold
+	url = https://github.com/Konfekt/FastFold.git
+[submodule "home/vim/dot-vim/pack/plugins/start/indentLine"]
+	path = home/vim/dot-vim/pack/plugins/start/indentLine
+	url = https://github.com/Yggdroot/indentLine
+[submodule "home/vim/dot-vim/pack/plugins/start/syntastic"]
+	path = home/vim/dot-vim/pack/plugins/start/syntastic
+	url = https://github.com/vim-syntastic/syntastic.git
+[submodule "home/zsh/dot-zfunctions/pure"]
+	path = home/zsh/dot-zfunctions/pure
+	url = https://github.com/sindresorhus/pure.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-notes"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-notes
+	url = https://github.com/xolox/vim-notes.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-misc"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-misc
+	url = https://github.com/xolox/vim-misc.git
+[submodule "home/vim/dot-vim/pack/plugins/start/vim-session"]
+	path = home/vim/dot-vim/pack/plugins/start/vim-session
+	url = https://github.com/xolox/vim-session.git

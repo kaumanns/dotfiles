@@ -7,10 +7,12 @@
 " :profile pause
 " :noautocmd qall!
 
+" https://github.com/ggVGc/vim-fuzzysearch.git
+" nnoremap / :FuzzySearch<CR>
+" let g:fuzzysearch_prompt = '/'
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Youcompleteme
-
-let g:ycm_filetype_blacklist = {}
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/airblade/vim-gitgutter
@@ -76,14 +78,19 @@ au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " 
 " Tmux integration
 " https://github.com/christoomey/vim-tmux-navigator
 
-let g:tmux_navigator_no_mappings = 1
-let g:tmux_navigator_save_on_switch = 1
+" let g:tmux_navigator_no_mappings = 1
+" let g:tmux_navigator_save_on_switch = 1
+"
+" nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+" nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+" nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+" nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+" nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
 
-nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/kien/ctrlp.vim
@@ -113,18 +120,53 @@ let g:ctrlp_use_caching = 0
 " https://github.com/vim-pandoc/vim-pandoc
 " https://github.com/vim-pandoc/vim-pandoc-syntax
 " https://github.com/vim-pandoc/vim-pandoc/blob/master/doc/pandoc.txt
+"
+" https://github.com/vim-pandoc/vim-pandoc-after.git
+" https://github.com/Konfekt/FastFold.git
 
 " Set default for spell checking
 let g:pandoc#spell#enabled = 1
 let g:pandoc#spell#default_langs = [ 'de', 'en' ]
 
-" To avoid the continuous recomputation of folds, in particular in insert mode, defer it to the switches between insert and normal mode.
-let g:pandoc#folding#fastfolds = 1
-let g:pandoc#folding#fold_yaml = 1
-let g:pandoc#folding#level = 1
-let g:pandoc#folding#mode = 'syntax' " syntax, stacked, relative
-
 let g:pandoc#syntax#conceal#use = 0
+
+" To avoid the continuous recomputation of folds, in particular in insert mode,
+" defer it to the switches between insert and normal mode.
+" let g:pandoc#folding#fastfolds = 1
+" let g:pandoc#folding#fold_yaml = 1
+" let g:pandoc#folding#level = 1
+" let g:pandoc#folding#mode = 'syntax' " syntax, stacked, relative
+
+let g:pandoc#modules#disabled = ['folding']
+
+" very old repo, does it work?
+let g:pandoc#after#modules#enabled = ["fastfold", "ultisnips"]
+
+" FastFold
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_savehook = 1
+let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+
+let g:fastfold_force = 1 "To prevent all fold methods
+let g:markdown_folding = 1
+let g:tex_fold_enabled = 1
+let g:vimsyn_folding = 'af'
+let g:xml_syntax_folding = 1
+"let g:javaScript_fold = 1 " uncommenting this will interrupt markdown/pandoc fold
+let g:sh_fold_enabled= 7
+let g:ruby_fold = 1
+let g:perl_fold = 1
+let g:perl_fold_blocks = 1
+let g:r_syntax_folding = 1
+let g:rust_fold = 1
+let g:php_folding = 1
+
+autocmd FileType pandoc
+      \ if exists('#EnableFastFolds') |
+      \   autocmd! EnableFastFolds |
+      \   augroup! EnableFastFolds |
+      \ endif
 
 " au BufNewFile,BufRead *.md set filetype=pandoc
 " au BufNewFile,BufRead *.md set syntax=pandoc
@@ -166,10 +208,43 @@ nmap ga <Plug>(EasyAlign)
 " The following changes the default filetype back to 'tex':
 let g:tex_flavor='latex'
 
+" Disable auto-replacement of " to `` or ''
+let g:Tex_SmartKeyQuote=0
+
+let g:tex_conceal = ""
+
+" http://vim-latex.sourceforge.net/documentation/latex-suite.html#latex-folding
+let g:Tex_FoldedSections="part,chapter,section,subsection,subsubsection,paragraph"
+let g:Tex_FoldedMisc=""
+
 " TIP: if you write your \label's as \label{fig:something}, then if you
 " type in \ref{fig: and press <C-n> you will automatically cycle through
 " all the figure labels. Very useful!
 set iskeyword+=:
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/tpope/vim-surround
+
+" ysiwb to surround with double *'s
+let b:surround_{char2nr('b')} = "**\r**"
+let b:surround_{char2nr('i')} = "*\r*"
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/vim-syntastic/syntastic.git
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1            " automatically load errors into the location list
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1                       " check for errors when a file is loaded
+
+let g:syntastic_check_on_wq = 0
+let g:syntastic_yaml_checkers = [ "yamllint" ]
+let g:syntastic_quiet_messages = { "type": "style" }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color
@@ -180,6 +255,9 @@ set iskeyword+=:
 let g:solarized_termtrans=1
 
 syntax enable " Enable sytnax highlighting
+
+autocmd BufNewFile,BufRead *.pl set syntax=prolog
+
 set background=dark
 colorscheme solarized
 
@@ -196,6 +274,20 @@ call matchadd('ColorColumn', '\%81v', 100)
 " " For light color scheme:
 " highlight ColorColumn ctermbg=7
 " call matchadd('ColorColumn', '\%81v', 0)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/Yggdroot/indentLine
+" Slow!
+
+" " let g:indentLine_char = '▏' " '⦙'
+" let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/xolox/vim-notes
+
+let g:notes_directories = ['~/Documents/Notes']
+let g:notes_suffix = '.txt'
+let g:notes_smart_quotes = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Misc
@@ -228,11 +320,15 @@ set rtp+=~/.fzf
 
 set virtualedit=all
 
+" Add hyphen to word object definition
+set iskeyword+=-
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Indentation and whitespace
 
 set autoindent
 set backspace=indent,eol,start
+set indentexpr= " hopefully disables annoying auto-indent after carriage+return
 set copyindent
 set expandtab " always uses spaces instead of tab characters
 set shiftround
@@ -242,6 +338,8 @@ set softtabstop=2
 set tabstop=2
 
 autocmd FileType make setlocal noexpandtab
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentexpr=
+autocmd FileType tex setlocal ts=2 sts=2 sw=2 expandtab
 
 " Remove trailing whitespaces at write
 autocmd BufWritePre * :%s/\s\+$//e
@@ -273,13 +371,16 @@ set foldnestmax=10 " 10 nested fold max
 " set foldmethod=indent " fold based on indent level
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Search
+" Search & Replace
 
-set noincsearch " don't search as characters are entered
+" set noincsearch " don't search as characters are entered
 " set hlsearch " highlight matches
 
 " Clear the search buffer
 nmap <silent> <leader>/ :noh<CR>
+
+" Search & replace word under cursor with \s
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Disable arrow keys and pageup/pagedown keys
@@ -307,3 +408,4 @@ inoremap <pagedown> <nop>
 
 vnoremap <pageup> <nop>
 vnoremap <pagedown> <nop>
+

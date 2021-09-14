@@ -10,18 +10,18 @@ set color_cmdline_bg=default
 set color_cmdline_fg=default
 set color_error=160
 set color_info=136
-set color_separator=240
+set color_separator=245
 
 # bottom status line
-set color_statusline_bg=16
+set color_statusline_bg=0
 set color_statusline_fg=37
 
 # bottom title line
-set color_titleline_bg=16
+set color_titleline_bg=0
 set color_titleline_fg=136
 
 # top title area
-set color_win_title_bg=16
+set color_win_title_bg=0
 set color_win_title_fg=64
 ##### playing file colors ######################################################
 # unselected currently playing track's text

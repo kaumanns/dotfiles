@@ -1,41 +1,44 @@
-# i3 config file (v4)
 #
-# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+# i3 config file (v4)
+# (Reference: https://i3wm.org/docs/userguide.html)
+#
 
-set $mod Mod1
+set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-# font pango:DejaVu Sans Mono 8
+font pango:DejaVu Sans Mono 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# Start a terminal
-bindsym $mod+Return exec st
-#bindsym $mod+Return exec i3-sensible-terminal
+# Just window borders, no title bars.
+default_border pixel 2
+# hide_edge_borders both
 
-# Start a file browser
-bindsym $mod+t exec thunar
-#bindsym $mod+t exec st -e ranger
+focus_follows_mouse yes
+
+################################################################################
+# Floating windows
+
+for_window [window_role="pop-up"]                       floating enable
+for_window [window_role="bubble"]                       floating enable
+for_window [window_role="task_dialog"]                  floating enable
+for_window [window_role="Preferences"]                  floating enable
+for_window [window_type="dialog"]                       floating enable
+for_window [window_type="menu"]                         floating enable
+
+################################################################################
+# Basic key bindings
+
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+
+# Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
 
 # Kill focused window
 bindsym $mod+Shift+q kill
-
-# Start dmenu (a program launcher)
-#bindsym $mod+d exec dmenu_run
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-
-# Take a screenshot
-bindsym $mod+u exec scrot $HOME/Downloads/`date +%Y-%m-%d_%H:%M:%S`.png
-bindsym --release $mod+Shift+u exec scrot -s $HOME/Downloads/`date +%Y-%m-%d_%H:%M:%S`.png
 
 # Change focus
 bindsym $mod+h focus left
@@ -60,8 +63,6 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-
-focus_follows_mouse no
 
 # Split in horizontal orientation
 bindsym $mod+b split h
@@ -89,12 +90,12 @@ bindsym $mod+a focus parent
 # Focus the child container
 bindsym $mod+z focus child
 
-bindsym XF86AudioRaiseVolume exec ~/volume.sh up
-bindsym XF86AudioLowerVolume exec ~/volume.sh down
-bindsym XF86AudioMute exec ~/volume.sh mute
+################################################################################
+# Workspaces
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
+# Move the current workspace to the next display output
+bindsym $mod+x move workspace to output up
+
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
@@ -130,72 +131,181 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-# Move workspaces between screens
-bindsym $mod+p move workspace to output right
+################################################################################
+# Program keybindings
 
-# Reload the configuration file
-bindsym $mod+Shift+c reload
-# Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# Exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# dmenu
+#bindsym $mod+d exec dmenu_run
+# There also is the (new) i3-dmenu-desktop which only displays applications
+# shipping a .desktop file. It is a wrapper around dmenu, so you need that
+# installed.
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
-# Move the current workspace to the next output
-# (effectively toggles when you only have two outputs)
-bindsym $mod+x move workspace to output right
+# Terminal
+bindsym $mod+Return exec --no-startup-id st
+#bindsym $mod+Return exec i3-sensible-terminal
 
-# Resize window (you can also use the mouse for that)
-mode "resize" {
-  # These bindings trigger as soon as you enter the resize mode
+# File manager
+bindsym $mod+y exec --no-startup-id st -e ranger
+bindsym $mod+Shift+y exec --no-startup-id thunar
 
-  # Pressing left will shrink the window’s width.
-  # Pressing right will grow the window’s width.
-  # Pressing up will shrink the window’s height.
-  # Pressing down will grow the window’s height.
-  bindsym h resize shrink width 10 px or 10 ppt
-  bindsym j resize grow height 10 px or 10 ppt
-  bindsym k resize shrink height 10 px or 10 ppt
-  bindsym l resize grow width 10 px or 10 ppt
+# Browser
+bindsym $mod+u exec --no-startup-id firefox
 
-  # same bindings, but for the arrow keys
-  bindsym Left resize shrink width 10 px or 10 ppt
-  bindsym Down resize grow height 10 px or 10 ppt
-  bindsym Up resize shrink height 10 px or 10 ppt
-  bindsym Right resize grow width 10 px or 10 ppt
+# Mail
+bindsym $mod+m exec --no-startup-id st -e neomutt
 
-  # back to normal: Enter or Escape or $mod+r
+# Notes
+bindsym $mod+n exec --no-startup-id st -e nvim note:
+
+################################################################################
+# Screenshots
+
+# Screenshot (PNG, full screen, disk): mod+<COMMA>
+bindcode --release $mod+59 exec scrot $HOME/Downloads/screenshot_fullscreen_`date +%Y-%m-%d_%H:%M:%S`.png
+
+# Screenshot (PNG, full screen, clipboard): mod+Shift+<COMMA>
+bindcode --release $mod+Shift+59 exec scrot --exec 'xclip -selection clipboard -target image/png -in $f' /tmp/screenshot_fullscreen_`date +%Y-%m-%d_%H:%M:%S`.png
+
+# Screenshot (PNG, selection, disk): mod+<FULLSTOP>
+bindcode --release $mod+60 exec scrot --select $HOME/Downloads/screenshot_selection_`date +%Y-%m-%d_%H:%M:%S`.png
+
+# Screenshot (PNG, selection, clipboard): mod+Shift+<FULLSTOP>
+bindcode --release $mod+Shift+60 exec scrot --select --exec 'xclip -selection clipboard -target image/png -in $f' /tmp/screenshot_selection_`date +%Y-%m-%d_%H:%M:%S`.png
+
+################################################################################
+# Redshift
+
+bindsym $mod+t mode "$mode_redshift"
+
+set $mode_redshift Set colour temperature: (a)uto, (r)eset, (2)500K, (3)000K, (4)000K, (5)000K
+
+set $kill_redshift pkill -9 redshift;
+
+mode "$mode_redshift" {
+    bindsym a exec --no-startup-id "$kill_redshift redshift -P -t 5000:4000", mode "default"
+    bindsym r exec --no-startup-id "$kill_redshift redshift -x", mode "default"
+    bindsym 2 exec --no-startup-id "$kill_redshift redshift -P -O 2500", mode "default"
+    bindsym 3 exec --no-startup-id "$kill_redshift redshift -P -O 3000", mode "default"
+    bindsym 4 exec --no-startup-id "$kill_redshift redshift -P -O 4000", mode "default"
+    bindsym 5 exec --no-startup-id "$kill_redshift redshift -P -O 5000", mode "default"
+
+    # Exit mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+################################################################################
+# Special keys
+# - Check available XF86* keysyms via `xmodmap -pke`
+# - Use sink name from `pactl list`.
+
+# Audio volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute          alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink toggle
+
+# XF86AudioMicMute
+
+# Screen brightness
+# (xbacklight requires xorg config for /sys/class/backlight)
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+
+# XF86Display
+
+# Keyboard brightness
+# bindsym XF86KbdBrightnessUp exec $HOME/.config/i3/kbdbacklight.sh up 10
+# bindsym XF86KbdBrightnessDown exec $HOME/.config/i3/kbdbacklight.sh down 10
+# bindsym XF86Display exec brightnessctl --device='tpacpi::kbd_backlight' set 0
+# bindsym XF86WLAN exec brightnessctl --device='tpacpi::kbd_backlight' set 2
+
+# Media player
+# bindsym XF86AudioPlay exec playerctl play-pause
+# bindsym XF86AudioPause exec playerctl play-pause
+# bindsym XF86AudioNext exec playerctl next
+# bindsym XF86AudioPrev exec playerctl previous
+# bindsym  exec playerctl play-pause
+# bindsym  exec playerctl play-pause
+# bindsym  exec playerctl previous
+bindsym XF86Favorites exec playerctl next
+
+################################################################################
+# System power controls
+
+bindsym $mod+Shift+e mode "$mode_system"
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+
+# sleep 1 adds a small delay to prevent possible race conditions with suspend
+set $Locker i3lock && sleep 1
+
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $Locker, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id systemctl hibernate, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
+
+    # Exit mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# Using nagbar:
+# bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+################################################################################
+# Resize window splits
+
+bindsym $mod+r mode "mode_resize"
+
+mode "mode_resize" {
+  bindsym h resize shrink width 5 px or 5 ppt
+  bindsym j resize grow height 5 px or 5 ppt
+  bindsym k resize shrink height 5 px or 5 ppt
+  bindsym l resize grow width 5 px or 5 ppt
+
+  bindsym Left resize shrink width 5 px or 5 ppt
+  bindsym Down resize grow height 5 px or 5 ppt
+  bindsym Up resize shrink height 5 px or 5 ppt
+  bindsym Right resize grow width 5 px or 5 ppt
+
+  # Exit mode
   bindsym Return mode "default"
   bindsym Escape mode "default"
   bindsym $mod+r mode "default"
 }
 
-bindsym $mod+r mode "resize"
+################################################################################
+# i3bar
 
-# Just window borders, no title bars.
-default_border pixel 1
-
-# hide_edge_borders both
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
 bar {
-	i3bar_command i3bar --transparency
+	i3bar_command i3bar
 	status_command i3status
 	position bottom
 	# output primary
 	# tray_output primary
 }
 
-exec --no-startup-id /usr/bin/xmodmap $HOME/.Xmodmap
+################################################################################
+# Startup
 
-# i3bar applets
-# exec_always --no-startup-id gnome-power-manager
-# exec --no-startup-id gnome-flashback
+# Desktop background color
+exec --no-startup-id xsetroot -solid "#000000"
+
+# Keyboard configuration
+exec --no-startup-id setxkbmap -option compose:caps && /usr/bin/xmodmap $HOME/.xmodmaprc
+
+# Audio applet
 exec --no-startup-id pasystray
-exec --no-startup-id nm-applet
-exec --no-startup-id blueman-applet
 
-# exec --no-startup-id feh --bg-scale ~/Pictures/atlantis_nebula_14-wallpaper-3840x2160.jpg
+# Network applet
+exec --no-startup-id nm-applet
+
+# Bluetooth applet
+exec --no-startup-id blueman-applet
 
 ################################################################################
 # Colors
@@ -208,12 +318,4 @@ client.unfocused        #073642 #073642 #93a1a1 #586e75
 client.urgent           #d33682 #d33682 #fdf6e3 #dc322f
 client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
 client.background       #002b36
-
-# Defaults
-# client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
-# client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
-# client.unfocused        #333333 #222222 #888888 #292d2e   #222222
-# client.urgent           #2f343a #900000 #ffffff #900000   #900000
-# client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
-# client.background       #ffffff
 

@@ -1,14 +1,24 @@
 !-------------------------------------------------------------------------------
 ! Xft settings
--------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------
 
-Xft.dpi: 160
-! 192
-! 128
-Xft.antialias: true
-Xft.rgba: rgb
-Xft.hinting: true
-Xft.hintstyle: hintslight
+! For 4k
+! Xft.dpi: 192 ! presentation mode
+! Xft.dpi: 160
+! Xft.dpi: 128
+! Xft*dpi: 112
+
+! For FHD
+Xft*dpi: 96
+
+Xft*antialias: false
+Xft*rgba: rgb
+Xft*hinting: true
+Xft*hintstyle: hintslight
+Xft*autohint: false
+
+Xft*font: xft:DejaVu Sans Mono:antialias=false:autohint=false:size=12
+Xft*boldfont: xft:DejaVu Sans Mono:antialias=false:autohint=false:size=12
 
 !-------------------------------------------------------------------------------
 ! URxvt settings
@@ -30,13 +40,13 @@ URxvt.lineSpace: 0
 URxvt.termName: rxvt-unicode-256color
 
 ! Fonts
-URxvt.allow_bold: false
+URxvt.allow_bold: true
+URxvt*font: xft:DejaVu Sans Mono:antialias=false:autohint=false:size=10
+URxvt*boldfont: xft:DejaVu Sans Mono:antialias=false:autohint=false:size=10
 /* URxvt.font: -*-terminus-medium-r-normal-*-12-120-72-72-c-60-iso8859-1 */
-URxvt*font: xft:Source Code Pro:antialias=true:size=11
-URxvt*boldfont: xft:Source Code Pro:antialias=true:size=11
 
 ! Fix font space
-URxvt*letterSpace: -1
+! URxvt*letterSpace: -1
 
 ! Scrollbar
 URxvt.scrollstyle: plain

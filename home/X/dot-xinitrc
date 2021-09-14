@@ -1,2 +1,7 @@
 xset b off
+xrdb -merge ~/.Xresources
+
+setxkbmap -option caps:none
+xmodmap ~/.xmodmaprc
+
 exec i3

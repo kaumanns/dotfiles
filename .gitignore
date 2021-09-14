@@ -1,9 +1,32 @@
 home/vdirsyncer/.vdirsyncer/status
-home/mutt/.mutt/log
-home/tmux/.tmux/resurrect
+home/mutt/dot-mutt/log
+home/tmux/dot-tmux/resurrect
+
 home/ranger/.config/ranger/history
 home/ranger/.config/ranger/tagged
-home/fonts/.fonts/.uuid
+
+home/fonts/dot-fonts/.uuid
+home/fonts/dot-fonts/Monaco_Linux.ttf
+
+home/firefox/.mozilla/firefox
+
+home/khal/.config/khal/khal.db
+
+# Personal information for mutt is all in here.
+home/mutt/dot-mutt/profiles
+
+# TODO: somehow deal with pure's master->main branch name change in `make update` flow.
+# home/zsh/dot-zfunctions/pure
+
+home/gnupg/.gnupg/.*
+home/gnupg/.gnupg/crls.d/
+home/gnupg/.gnupg/openpgp-revocs.d/
+home/gnupg/.gnupg/private-keys-v1.d/
+home/gnupg/.gnupg/pubring.kbx
+home/gnupg/.gnupg/random_seed
+home/gnupg/.gnupg/tofu.db
+home/gnupg/.gnupg/trustdb.gpg
+home/gnupg/.gnupg/trustlist.txt
 
 ### Linux ###
 *~

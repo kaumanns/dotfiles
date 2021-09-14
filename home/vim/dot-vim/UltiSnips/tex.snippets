@@ -1,0 +1,137 @@
+snippet header
+\documentclass{article}
+
+% Encoding
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% German-specific commands
+\usepackage[ngerman]{babel}
+
+% Hyphenation rules
+\usepackage{hyphenat}
+\hyphenation{Mathe-matik wieder-gewinnen}
+
+\usepackage[margin=2cm]{geometry}
+
+% Add references to TOC
+\usepackage[nottoc]{tocbibind}
+
+% Natbib bibliography managment
+\usepackage{natbib}
+\bibliographystyle{abbrvnat}
+
+% \usepackage{amsmath}
+\usepackage{graphicx}
+% \usepackage{csquotes}
+
+\title{$1}
+
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+	\apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{$2}
+
+\author{$3}
+\date{\today}
+
+\begin{document}
+
+$5
+
+\bibliography{$4}
+
+\end{document}
+endsnippet
+
+snippet fig
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.75\textwidth]{$2}
+	\caption{%
+
+	}
+	\label{fig:$1}
+\end{figure}
+endsnippet
+
+
+snippet figs
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[ht]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{$2}
+		\caption{%
+
+		}
+		\label{fig:$1}
+	\end{subfigure}
+	\begin{subfigure}[ht]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{$2}
+		\caption{%
+
+		}
+		\label{fig:$1}
+	\end{subfigure}
+	\caption{%
+
+	}
+	\label{fig:}
+	\end{figure}
+endsnippet
+
+
+snippet tab
+\begin{table}
+	\begingroup
+	\setlength{\tabcolsep}{10pt}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\begin{tabular}{ l | l l }
+		$2 &  &  \\\
+		\hline
+		&  &  \\\
+	\end{tabular}
+	\caption{%
+
+	}
+	\label{tab:$1}
+	\endgroup
+\end{table}
+endsnippet
+
+
+snippet equ
+\begin{equation}
+	\begin{split}
+		$2 &= $3
+	\end{split}
+	\label{equ:$1}
+\end{equation}
+endsnippet
+
+
+snippet def
+\begin{definition}[$1]
+	$2
+	\label{def:$3}
+\end{definition}
+endsnippet
+
+
+snippet beg
+\begin{$1}
+	$2
+\end{$1}
+endsnippet
+
+
+snippet item
+\begin{itemize}
+	\item $1
+\end{itemize}
+endsnippet
+

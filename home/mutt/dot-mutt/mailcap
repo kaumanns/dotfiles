@@ -10,8 +10,11 @@ application/vnd.openxmlformats-officedocument.wordprocessingml.document; pandoc 
 application/vnd.oasis.opendocument.text; pandoc --from odt --to markdown %s; copiousoutput;
 
 # PDFs
-application/pdf; evince %s &; test=test -n "$DISPLAY";
+application/pdf; xreader %s &; test=test -n "$DISPLAY";
 application/pdf; pdftotext -layout %s - &; copiousoutput;
+
+application/pgp-keys; nvim;
+application/pgp-signature; nvim;
 
 # Images
 image/*; feh %s; test=test -n "$DISPLAY";
@@ -23,7 +26,8 @@ image/*; ~/.mutt/imagetoascii.sh %s;
 text/html; w3m -I %{charset} -T text/html -cols 9999 -o display_link_number=1; copiousoutput;
 
 # Text
-text/*; less; copiousoutput;
+text/*; nvim;
+# text/*; less; copiousoutput;
 
 application/ics; khal import -a logistics %s
 text/calendar; khal import -a logistics %s
