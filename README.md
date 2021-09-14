@@ -1,8 +1,10 @@
-# dotOS
+# My dotfiles
 
 Fancy GNU stow wrapper for easy setup of GNU/Linux systems with personal tools and configurations.
 
 Supports git submodules (e.g. for vim extensions).
+
+**WARNING**: this solution is still experimental. I recommend taking the code and the dotfiles only as a reference for your own solution.
 
 ## Installation
 
