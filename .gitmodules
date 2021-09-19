@@ -94,3 +94,6 @@
 [submodule "home/vim/dot-vim/pack/plugins/start/vim-session"]
 	path = home/vim/dot-vim/pack/plugins/start/vim-session
 	url = https://github.com/xolox/vim-session.git
+[submodule "tools/snapshot"]
+	path = tools/snapshot
+	url = https://github.com/kaumanns/snapshot.git
