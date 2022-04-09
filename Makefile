@@ -1,6 +1,7 @@
 ################################################################################
 # Make configuration
 
+# Use bash in strict mode
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 
@@ -23,15 +24,21 @@ PIP := pip3
 STOW := stow
 STOW_DIR := home
 
-# INSTALL_CMD := sudo apt install -y
-INSTALL_CMD := sudo pacman --needed --noconfirm -Sy
-
 ################################################################################
 # Functions
 
 dirs = $(shell ls $(1))
-package-install = $(INSTALL_CMD) $(1)
+
+OS_NAME := $(patsubst NAME=%,%,$(shell cat /etc/*-release | grep "^NAME="))
+
+ifeq ($(OS_NAME), "Arch Linux")
+	package-install = pacman -Q | grep "^$1 " || sudo pacman --needed --noconfirm --upgrade --refresh--sync $1
+else ifeq  ($(OS_NAME), "Debian")
+	package-install = sudo apt install -y $1
+endif
+
 pip-install = $(PIP) install --upgrade --user $(1)
+
 stow = $(STOW) --restow --verbose 1 --dotfiles --dir $(STOW_DIR) --target $(1) $(2)
 
 STOW_SUBDIRS = $(call dirs,$(STOW_DIR))
@@ -67,36 +74,47 @@ update-submodules:
 	$(GIT) submodule foreach '$(GIT) checkout master && $(GIT) pull'
 .PHONY: update-submodules
 
-stow: $(addsuffix .stow,$(STOW_SUBDIRS)) | update
-.PHONY: stow
+# stow: $(addsuffix .stow,$(STOW_SUBDIRS)) | update
+# .PHONY: stow
 
 ################################################################################
 # Methods
-
-%.stow:
-	$(call stow,~,$*)
-	$(MAKE) $*.setup
 
 # TODO
 # %.root:
 # 	sync
 # 	$(call stow,/,$*)
 
-%.package-install:
-	$(call package-install,$*)
-
-%.pip-install:
-	$(call pip-install,$*)
-
 %.mkdir:
 	@[[ -d $* ]] || mkdir -p $*
 
-define setup_template
-$1.setup: $$($1.prerequisites) | $$($1.order-only-prerequisites) $$(addsuffix .package-install,$$($1.package-dependencies)) $$(addsuffix .pip-install,$$($1.pip-dependencies)) $$(addsuffix .mkdir,$$($1.required-directories))
-	$$($1.setup-recipe)
+define stow =
+	$(STOW) \
+		--restow \
+		--verbose 1 \
+		--dotfiles \
+		--dir $(dir $1) \
+		--target $2 \
+		$(notdir $1)
 endef
 
-$(foreach dir,$(STOW_SUBDIRS),$(eval $(call setup_template,$(dir))))
+# Iterate over source directories and build rules for stowing and setting up.
+define stow_template
+$$($1.target): $(STOW_DIR)/$1
+	$$(call stow,$$<,$(HOME))
+	$$(MAKE) $$@.setup
+
+$1.setup: $$($1.prerequisites) | $$($1.order-only-prerequisites)
+	$$(if $$($1.package-dependencies),$$(call package-install,$$($1.package-dependencies)))
+	$$(if $$($1.pip-dependencies),$$(call pip-install,$$($1.pip-dependencies)))
+	$$($1.setup-recipe)
+	@echo "DONE"
+
+$1: $$($1.target)
+
+endef
+$(foreach dir,$(STOW_SUBDIRS),$(eval $(call stow_template,$(dir))))
 
 %.setup:
 	@echo "No setup instructions defined for $* -- skipping."
+

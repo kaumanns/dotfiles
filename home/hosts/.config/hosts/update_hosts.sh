@@ -10,12 +10,45 @@
 
 set -e # Die on error
 
-LIST_HOME="$HOME/git/dotfiles/home/hosts/.config/hosts"
+print_help () {
+  echo "Usage: ./$0 -l <path to dir of hosts lists, repo, etc.>"
+}
 
-HOSTS_REPO="$LIST_HOME/hosts"
-HOSTS_URLS="$LIST_HOME/hosts-blacklist-urls"
-HOSTS_BLACKLIST="$LIST_HOME/hosts-blacklist"
-HOSTS_WHITELIST="$LIST_HOME/hosts-whitelist"
+if [ "$#" -eq 0 ]
+then
+  print_help >&2
+  exit 1
+else
+  while getopts "h:l:" opt
+  do
+    case "${opt}" in
+      h )
+        print_help >&2
+        exit 1
+        ;;
+      l )
+        list_home="$OPTARG"
+        ;;
+      ? )
+        echo "$0: Invalid option: -$OPTARG" >&2
+        exit 1
+        ;;
+      : )
+        echo "$0: Option -$OPTARG needs path as an argument." >&2
+        exit 1
+        ;;
+      * )
+        print_help >&2
+        exit 1
+        ;;
+    esac
+  done
+fi
+
+HOSTS_REPO="$list_home/hosts"
+HOSTS_URLS="$list_home/hosts-blacklist-urls"
+HOSTS_BLACKLIST="$list_home/hosts-blacklist"
+HOSTS_WHITELIST="$list_home/hosts-whitelist"
 
 HOSTS_CUSTOM="/tmp/hosts_custom"
 
@@ -58,3 +91,4 @@ run () {
       # --extensions social \
 
 run
+

@@ -9,11 +9,11 @@ bind -f common I run mediainfo {}
 
 set format_trackwin_album= %{album} %{?y?(%{date})}%= %{albumduration}
 
-set format_trackwin= %02{tracknumber}. %-40{title}%= | %-15{genre} | %{duration}
+set format_trackwin= %02{tracknumber}. %-50{title}%= | %-15{genre} | %-4{codec} | %{duration}
 
 set format_trackwin_va=
 
-set format_playlist= %02{tracknumber}. %-40{title}%= | %-30{album} | %-20{artist} | %-15{genre} | %{duration}
+set format_playlist= %02{tracknumber}. %-50{title}%= | %-30{album} | %-20{artist} | %-15{genre} | %{duration}
 
 set format_playlist_va=
 
@@ -22,3 +22,5 @@ set format_current= %{artist}: %{title} (%{album}%{?y?, %{date}})
 set format_statusline= %{status}%= %1{follow}%1{repeat}%1{shuffle} %{?show_playback_position?%{position} %{?duration?/ %{duration} }?%{?duration?%{duration} }}
 
 set tree_width_percent=20
+set status_display_program=/home/david/.config/cmus/cmus-feh.sh
+# set status_display_program=/home/david/.config/cmus/cmus-cover-art/observe.sh

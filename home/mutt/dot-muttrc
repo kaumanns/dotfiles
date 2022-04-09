@@ -1,24 +1,24 @@
 source ~/.mutt/solarized-dark-256.neomuttrc
 
-source ~/.mutt/profiles/personal.muttrc
-source ~/.mutt/profiles/uni.muttrc
-source ~/.mutt/profiles/archive.muttrc
-source ~/.mutt/profiles/personal.muttrc
+source ~/.mutt/email_profiles/personal.muttrc
+# source ~/.mutt/email_profiles/uni.muttrc
+source ~/.mutt/email_profiles/archive.muttrc
+source ~/.mutt/email_profiles/personal.muttrc
 
 send-hook . 'unset crypt_autoencrypt'
 # send-hook . 'unset pgp_autosign; unset pgp_autoencrypt'
 # send-hook '~h heinlein-hosting.de' 'unset crypt_autoencrypt'
 
-folder-hook mailbox/* source ~/.mutt/profiles/personal.muttrc
-folder-hook archive/* source ~/.mutt/profiles/archive.muttrc
-folder-hook uni/*     source ~/.mutt/profiles/uni.muttrc
+folder-hook mailbox/*   source ~/.mutt/email_profiles/personal.muttrc
+folder-hook archive/*   source ~/.mutt/email_profiles/archive.muttrc
+# folder-hook uni/*       source ~/.mutt/email_profiles/uni.muttrc
 
 auto_view text/html
 alternative_order text/html text/plain text/enriched
 
 # For some reason, timeout-hook has to be placed AFTER startup-hook for startup-hook (and possibly timeout-hook as well) in order to work.
-startup-hook 'echo `mbsync --config /home/david/.mutt/profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/profiles/notmuch.conf new`'
-timeout-hook 'echo `mbsync --config /home/david/.mutt/profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/profiles/notmuch.conf new`'
+startup-hook 'echo `mbsync --config /home/david/.mutt/email_profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/email_profiles/notmuch.conf new`'
+timeout-hook 'echo `mbsync --config /home/david/.mutt/email_profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/email_profiles/notmuch.conf new`'
 # shutdown-hook
 
 ################################################################################
@@ -114,7 +114,7 @@ macro index,pager M \
 #     "Archive message"
 
 macro index S \
-    "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch --config=/home/david/.mutt/profiles/notmuch.conf search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" \
+    "<enter-command>unset wait_key<enter><shell-escape>read -p 'notmuch query: ' x; echo \$x >~/.cache/mutt_terms<enter><limit>~i \"\`notmuch --config=/home/david/.mutt/email_profiles/notmuch.conf search --output=messages \$(cat ~/.cache/mutt_terms) | head -n 600 | perl -le '@a=<>;chomp@a;s/\^id:// for@a;$,=\"|\";print@a'\`\"<enter>" \
     "Show only messages matching a notmuch pattern"
 
 macro index i \
@@ -134,20 +134,15 @@ macro attach,compose \Cu \
     "Extract URLs"
 
 macro index o \
-    "<shell-escape>mbsync --config /home/david/.mutt/profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/profiles/notmuch.conf new<enter>" \
+    "<shell-escape>mbsync --config /home/david/.mutt/email_profiles/mbsyncrc --all && notmuch --config=/home/david/.mutt/email_profiles/notmuch.conf new<enter>" \
     "Sync maildir"
 
 macro index <f4> \
     "<sync-mailbox><enter-command> \
-    source ~/.mutt/profiles/personal.muttrc \
+    source ~/.mutt/email_profiles/personal.muttrc \
     <enter><change-folder>!<enter>"
 
 macro index <f5> \
     "<sync-mailbox><enter-command> \
-    source ~/.mutt/profiles/uni.muttrc \
-    <enter><change-folder>!<enter>"
-
-macro index <f6> \
-    "<sync-mailbox><enter-command> \
-    source ~/.mutt/profiles/archive.muttrc \
+    source ~/.mutt/email_profiles/archive.muttrc \
     <enter><change-folder>!<enter>"

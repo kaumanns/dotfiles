@@ -1,6 +1,4 @@
 + /.config/***
-+ /.electron-cash/***
-+ /.electrum/***
 + /.gnupg/***
 + /.mozilla/***
 + /Audio/***
@@ -11,6 +9,7 @@
 + /Mail/***
 + /Music/***
 + /Pictures/***
++ /Photos/***
 + /Software/***
 + /Videos/***
 + /git/***

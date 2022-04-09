@@ -94,7 +94,7 @@ bindsym $mod+z focus child
 # Workspaces
 
 # Move the current workspace to the next display output
-bindsym $mod+x move workspace to output up
+bindsym $mod+x move workspace to output left
 
 set $ws1 "1"
 set $ws2 "2"
@@ -147,7 +147,7 @@ bindsym $mod+Return exec --no-startup-id st
 
 # File manager
 bindsym $mod+y exec --no-startup-id st -e ranger
-bindsym $mod+Shift+y exec --no-startup-id thunar
+# bindsym $mod+Shift+y exec --no-startup-id thunar
 
 # Browser
 bindsym $mod+u exec --no-startup-id firefox
@@ -201,9 +201,9 @@ mode "$mode_redshift" {
 # - Use sink name from `pactl list`.
 
 # Audio volume
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute          alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume `pactl list sinks short | grep RUNNING | cut -f 2 ` +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume `pactl list sinks short | grep RUNNING | cut -f 2 ` -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute `pactl list sinks short | grep RUNNING | cut -f 2 ` toggle
 
 # XF86AudioMicMute
 
@@ -306,6 +306,12 @@ exec --no-startup-id nm-applet
 
 # Bluetooth applet
 exec --no-startup-id blueman-applet
+
+# Automounter
+exec --no-startup-id udiskie -s
+
+# Redshift
+exec --no-startup-id redshift -P -O 2500
 
 ################################################################################
 # Colors

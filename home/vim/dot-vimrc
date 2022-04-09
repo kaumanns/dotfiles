@@ -241,10 +241,9 @@ set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1            " automatically load errors into the location list
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1                       " check for errors when a file is loaded
-
 let g:syntastic_check_on_wq = 0
 let g:syntastic_yaml_checkers = [ "yamllint" ]
-let g:syntastic_quiet_messages = { "type": "style" }
+" let g:syntastic_quiet_messages = { "type": "style" }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color
@@ -257,6 +256,7 @@ let g:solarized_termtrans=1
 syntax enable " Enable sytnax highlighting
 
 autocmd BufNewFile,BufRead *.pl set syntax=prolog
+autocmd BufNewFile,BufRead *.md set syntax=pandoc
 
 set background=dark
 colorscheme solarized
@@ -374,7 +374,7 @@ set foldnestmax=10 " 10 nested fold max
 " Search & Replace
 
 " set noincsearch " don't search as characters are entered
-" set hlsearch " highlight matches
+set hlsearch " highlight matches
 
 " Clear the search buffer
 nmap <silent> <leader>/ :noh<CR>

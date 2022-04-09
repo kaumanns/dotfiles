@@ -5,6 +5,8 @@
 ################################################################################
 # i3
 
+i3.target = $(HOME)/.config/i3/config
+
 i3.package-dependencies = \
 	$(i3.battery_management) \
 	$(i3.command_line_applications) \
@@ -15,11 +17,12 @@ i3.package-dependencies = \
 
 i3.android_file_transfer = libmtp gvfs-mtp
 i3.audio = cmus tageditor
+i3.video = mpv
 i3.battery_management = tlp tp_smapi
 i3.bluetooth = blueman bluez buez-utils
 i3.command_line_applications = pulseaudio-bluetooth autorandr openssh wget zbar pdftk $(i3.audio)
-i3.desktop_applications = dmenu xreader vlc cheese redshift gpicview pwgen $(i3.file_manager)
-i3.file_manager = thunar gvfs thunar-archive-plugin file-roller $(i3.android_file_transfer)
+i3.desktop_applications = dmenu xreader cheese redshift gpicview pwgen $(i3.file_manager) $(i3.video)
+i3.file_manager = thunar gvfs thunar-archive-plugin file-roller udiskie $(i3.android_file_transfer)
 i3.network-manager = network-manager network-manager-applet
 i3.printer = cups avahi-daemon nss-mdns
 i3.wireless = $(i3.bluetooth) $(i3.network-manager)
@@ -46,51 +49,77 @@ endef
 ################################################################################
 # vim
 
-vim.package-dependencies = neovim $(vim.youcompleteme.package-dependencies)
+vim.target := $(HOME)/.vimrc
+
+vim.package-dependencies := neovim $(vim.youcompleteme.package-dependencies)
 vim.youcompleteme.package-dependencies := cmake python3
 vim.pip-dependencies := neovim yamllint
 
+# define vim.setup-recipe
 define vim.setup-recipe
 cd $(HOME)/.vim/pack/plugins/start/YouCompleteMe \
-	&& ./install.py --clang-completer --system-libclang;
+	&& ./install.py \
+		--clang-completer \
+		--system-libclang;
 endef
 
 ################################################################################
 # Firefox
 
-firefox.package-dependencies: firefox
+firefox.target =  $(HOME).mozilla/user-overrides.js
 
-# DEPRECATED: direct symlink to user.js
-# firefox.profile-dir = $(shell echo $$(find $(HOME)/.mozilla/firefox -name '*default*' | head -1))
-#
-# define firefox.setup-recipe
-# ln -sf ../../firefox-user.js $(firefox.profile-dir)/user.js
-# endef
+firefox.package-dependencies = firefox
 
 # Update hardened user.js from repo and apply user overrides.
 define firefox.setup-recipe
-home/firefox/.mozilla/user.js/updater.sh -s -o $(HOME)/.mozilla/user-overrides.js -p $(HOME)/.mozilla/firefox/*default*
+$(HOME)/.mozilla/user.js/updater.sh \
+	-s \
+	-o $(HOME)/.mozilla/user-overrides.js \
+	-p $(HOME)/.mozilla/firefox/*default-release
 endef
 
 ################################################################################\
 # mutt
 
+mutt.target = $(HOME)/.muttrc
+
 mutt.package-dependencies := neomutt msmtp notmuch notmuch-mutt urlscan isync feh pass
-mutt.required-directories := $(HOME)/.mail/personal $(HOME)/.mail/work
 
 define mutt.setup-recipe
+mkdir -p $(HOME)/Mail/personal $(HOME)/Mail/work
 mbsync --all;
 notmuch new;
 mu init --maildir $(HOME)/.mail && mu index;
-echo "Don't forget to export EMAIL=<user@host.tld>!";
+echo "Don't forget to export EMAIL=<USER@HOST.TLD>!";
 endef
 
 ################################################################################
 # zsh
 
+# zsh.package-dependencies = zsh w3m unzip pass htop ncdu rsync highlight autossh imagemagick tlp tlp-rdw $(zsh.pandoc.package-dependencies)
+# zsh.pandoc.package-dependencies := pandoc texlive-most inetutils
+# zsh.order-only-prerequisites := dircolors.stow
+#
+# define zsh.setup-recipe
+# echo "Setting up git" \
+# 	&& $(GIT) config --global user.email "$$USER@`hostname`" \
+# 	&& $(GIT) config --global user.name "$$USER" \
+# 	&& $(GIT) config --global pull.rebase false;
+# chsh -s /bin/zsh $$USER;
+# echo "Setting up ssh" \
+#   && [[ -e $(HOME)/.ssh/id_rsa.pub ]] \
+# 		|| ssh-keygen \
+# 			-t rsa \
+# 			-b 4096 \
+# 			-C "`whoami`@`hostname`";
+# endef
+
+zsh.target = $(HOME)/.zshrc
+dircolors.target = $(HOME)/.dircolors
+
 zsh.package-dependencies = zsh w3m unzip pass htop ncdu rsync highlight autossh imagemagick tlp tlp-rdw $(zsh.pandoc.package-dependencies)
 zsh.pandoc.package-dependencies := pandoc texlive-most inetutils
-zsh.order-only-prerequisites := dircolors.stow
+zsh.prerequisites := $(dircolors.target)
 
 define zsh.setup-recipe
 echo "Setting up git" \
@@ -108,6 +137,8 @@ endef
 
 ################################################################################
 # st
+
+st.target = $(HOME)/.config/st/st-my.diff
 
 st.package-dependencies := libfreetype-dev libx11-dev libxft-dev fonts-symbola
 st.diffs := \
@@ -133,7 +164,7 @@ endef
 ################################################################################
 # neomutt TODO
 
-st.package-dependencies :=
+neomutt.package-dependencies :=
 
 define neomutt.setup-recipe
 sudo apt build-dep neomutt
@@ -146,8 +177,10 @@ endef
 ################################################################################
 # hosts
 
+hosts.target = $(HOME)/.config/hosts/update_hosts.sh
+
 define hosts.setup-recipe
-$(HOME)/.config/hosts/update_hosts.sh
+$(HOME)/.config/hosts/update_hosts.sh -l "$(dir $(hosts.target))"
 endef
 
 ################################################################################\
@@ -168,3 +201,6 @@ tmux.package-dependencies := tmux
 dircolors.pip-dependencies := dircolors
 
 updateable := firefox hosts
+
+backup:
+	tools/snapshot/snapshot.sh -s ~ -d /run/media/david/2TB/backups -p -i ~/.rsync/include

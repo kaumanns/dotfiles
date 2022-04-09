@@ -12,9 +12,6 @@ home/firefox/.mozilla/firefox
 
 home/khal/.config/khal/khal.db
 
-# Personal information for mutt is all in here.
-home/mutt/dot-mutt/profiles
-
 # TODO: somehow deal with pure's master->main branch name change in `make update` flow.
 # home/zsh/dot-zfunctions/pure
 

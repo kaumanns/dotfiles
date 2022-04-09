@@ -1,0 +1,35 @@
+""" Plugins  --------------------------------
+set surround
+set multiple-cursors
+set commentary
+set argtextobj
+set easymotion
+set textobj-entire
+set ReplaceWithRegister
+set exchange
+
+""" Common settings -------------------------
+
+" Show current mode
+set showmode
+
+" Always display n lines above or below cursor when scrolling.
+set scrolloff=5
+
+" Highlight search terms.
+set hlsearch
+" Show search matches while typing.
+set incsearch
+
+" Show line numbers.
+set number
+
+
+" keep visual selection when reindenting
+xnoremap > >gv
+xnoremap < <gv
+
+set showmatch " highlight matching [{()}]
+
+" Clear the search buffer
+nmap <silent> <leader>/ :noh<CR>
