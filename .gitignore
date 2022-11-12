@@ -1,6 +1,11 @@
+# Vim plugin directories
+home/vim/dot-vim/autoload
+home/vim/dot-vim/plugged
+
 home/vdirsyncer/.vdirsyncer/status
 home/mutt/dot-mutt/log
 home/tmux/dot-tmux/resurrect
+home/tmux/dot-tmux/plugins
 
 home/ranger/.config/ranger/history
 home/ranger/.config/ranger/tagged
@@ -24,6 +29,8 @@ home/gnupg/.gnupg/random_seed
 home/gnupg/.gnupg/tofu.db
 home/gnupg/.gnupg/trustdb.gpg
 home/gnupg/.gnupg/trustlist.txt
+
+.idea/
 
 ### Linux ###
 *~
