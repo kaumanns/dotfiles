@@ -1,0 +1,42 @@
+set realname="David Kaumanns"
+set from="david@kaumanns.io"
+
+my_hdr Bcc: $from
+
+set folder    = "~/Mail/mailbox"
+set mbox      = "+INBOX"
+set mbox_type = "Maildir"
+set postponed = "+Drafts"
+set record    = "+Sent"
+set sendmail  = "msmtp --account=mailbox"
+set signature = "~/.mutt/profiles/personal.signature"
+set spoolfile = "+INBOX"
+
+# Neomutt with sidebar
+named-mailboxes "INBOX"  ="INBOX"
+named-mailboxes "Seen"   ="Seen"
+named-mailboxes "Sent"   ="Sent"
+named-mailboxes "Drafts" ="Drafts"
+named-mailboxes "Trash"  ="Trash"
+named-mailboxes "Junk"   ="Junk"
+
+set new_mail_command = "~/.mutt/mark_mails_as_seen.sh ~/Mail/mailbox/INBOX 'David Kaumanns'; notify-send 'New Email' '%n new messages, %u unread.' &"
+
+macro compose Y "<attach-key>`echo 83B21DD6874CED29DE990531235B047EF5F74CB5`<enter><enter><send-message>"
+
+set crypt_use_gpgme = yes
+set crypt_opportunistic_encrypt = yes
+set pgp_check_gpg_decrypt_status_fd = yes
+set pgp_use_gpg_agent = yes
+
+set pgp_default_key="83B21DD6874CED29DE990531235B047EF5F74CB5"
+set pgp_self_encrypt = yes
+
+set crypt_autoencrypt = yes
+set crypt_replyencrypt = yes
+set crypt_replysignencrypted = yes
+
+set crypt_autosign = yes
+set crypt_replysign = yes
+set crypt_verify_sig = yes
+

@@ -1,0 +1,26 @@
+set realname="David Kaumanns"
+set from="D.Kaumanns@campus.lmu.de"
+
+my_hdr Bcc: $from
+
+set folder    = "~/Mail/uni"
+set mbox      = "+INBOX"
+set mbox_type = "Maildir"
+set postponed = "+Drafts"
+set record    = "+Sent"
+set sendmail  = "msmtp --account=uni"
+set signature = "~/.mutt/personal.signature"
+set spoolfile = "+INBOX"
+
+# Neomutt with sidebar
+named-mailboxes "Uni-Inbox"  ="INBOX"
+named-mailboxes "Uni-Sent"   ="Sent"
+named-mailboxes "Uni-Drafts" ="Drafts"
+named-mailboxes "Uni-Trash"  ="Trash"
+named-mailboxes "Uni-Junk"   ="Junk"
+named-mailboxes "Uni-Spam"   ="Spam"
+
+set new_mail_command = "~/.mutt/mark_mails_as_seen.sh ~/Mail/uni/INBOX 'David Kaumanns'; notify-send 'New Email' '%n new messages, %u unread.' &"
+
+set pgp_self_encrypt = no
+set crypt_autoencrypt = no

@@ -1,0 +1,50 @@
+IMAPAccount mailbox
+Host imap.mailbox.org
+User david@kaumanns.io
+PassCmd "pass mailbox.org | head -1"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore mailbox-remote
+Account mailbox
+
+MaildirStore mailbox-local
+Subfolders Verbatim
+Path ~/Mail/mailbox/
+Inbox ~/Mail/mailbox/INBOX
+
+Channel mailbox
+Far :mailbox-remote:
+Near :mailbox-local:
+Patterns * !Seen !Sent !Drafts !Trash !Junk
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Sync the movement of messages between folders and deletions, add after making sure the sync works
+Expunge Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+
+
+# IMAPAccount uni
+# Host studlmu.lrz.de
+# User D.Kaumanns@campus.lmu.de
+# PassCmd "pass mail.uni | head -1"
+# SSLType IMAPS
+# SSLVersions TLSv1.2
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
+#
+# IMAPStore uni-remote
+# Account uni
+#
+# MaildirStore uni-local
+# Subfolders Verbatim
+# Path ~/Mail/uni/
+# Inbox ~/Mail/uni/INBOX
+#
+# Channel uni
+# Far :uni-remote:
+# Near :uni-local:
+# Patterns *
+# Create Both
+# SyncState *
+

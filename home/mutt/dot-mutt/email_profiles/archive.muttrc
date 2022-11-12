@@ -1,0 +1,30 @@
+set realname="David Kaumanns"
+set from="david@heidenblog.de"
+
+my_hdr Bcc: $from
+
+set folder    = "~/Mail/archive"
+set mbox      = "+2021"
+set mbox_type = "Maildir"
+set postponed = "+Drafts"
+set record    = "+Sent"
+set sendmail  = "msmtp --account=mailbox"
+set signature = "~/.mutt/mailbox.signature"
+set spoolfile = "+2021"
+
+# Neomutt with sidebar
+named-mailboxes "old-Sent"   ="Sent"
+named-mailboxes "old-Drafts" ="Drafts"
+named-mailboxes "2021"       ="2021"
+named-mailboxes "2020"       ="2020"
+named-mailboxes "2019"       ="2019"
+named-mailboxes "2018"       ="2018"
+named-mailboxes "2017"       ="2017"
+named-mailboxes "2016"       ="2016"
+named-mailboxes "2015"       ="2015"
+named-mailboxes "2014"       ="2014"
+
+# set new_mail_command = "~/.mutt/mark_mails_as_seen.sh ~/Mail/archive/INBOX 'David Kaumanns'; notify-send 'New Email' '%n new messages, %u unread.' &"
+
+set pgp_self_encrypt = no
+set crypt_autoencrypt = no

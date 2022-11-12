@@ -1,0 +1,22 @@
+set realname="David Kaumanns"
+set from="david.kaumanns@moresophy.com"
+
+my_hdr Bcc: $from
+
+set folder    = "~/Mail/moresophy"
+set mbox      = "+INBOX"
+set mbox_type = "Maildir"
+set postponed = "+Drafts"
+set record    = "+Sent"
+set sendmail  = "msmtp --account=moresophy"
+set signature = "~/.mutt/profiles/work.signature"
+set spoolfile = "+INBOX"
+
+# Neomutt with sidebar
+named-mailboxes "Work-INBOX"  ="INBOX"
+named-mailboxes "Work-Sent"   ="Gesendete Objekte"
+named-mailboxes "Work-Drafts" ="Entw&APw-rfe"
+named-mailboxes "Work-Trash"  ="Papierkorb"
+named-mailboxes "Work-Junk"   ="Spam"
+
+set new_mail_command = "~/.mutt/mark_mails_as_seen.sh ~/Mail/moresophy/INBOX 'David Kaumanns'; notify-send 'New Email' '%n new messages, %u unread.' &"
