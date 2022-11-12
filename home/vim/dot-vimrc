@@ -1,4 +1,4 @@
-" Instructions for profiling in order to detect naughty plugins:
+" Instructions for profiling in order tpandoc#folding#fastfoldso detect naughty plugins:
 "
 " :profile start profile.log
 " :profile func *
@@ -11,16 +11,48 @@
 " nnoremap / :FuzzySearch<CR>
 " let g:fuzzysearch_prompt = '/'
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Youcompleteme
+call plug#begin('~/.vim/plugged')
+" https://github.com/junegunn/vim-plug
+" The default plugin directory will be as follows:
+"   - Vim (Linux/macOS): '~/.vim/plugged'
+"   - Vim (Windows): '~/vimfiles/plugged'
+"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
+" You can specify a custom plugin directory by passing it as the argument
+"   - e.g. `call plug#begin('~/.vim/plugged')`
+"   - Avoid using standard Vim directory names like 'plugin'
+
+" Make sure you use single quotes
+
+Plug 'SirVer/ultisnips'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'junegunn/vim-easy-align'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'konfekt/fastfold'
+Plug 'lifepillar/vim-solarized8'
+Plug 'preservim/nerdtree'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-after'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-syntastic/syntastic'
+Plug 'xolox/vim-misc'  " for xolox plugins
+Plug 'xolox/vim-session'
+Plug 'ycm-core/Youcompleteme'
+
+" Initialize plugin system
+" - Automatically executes `filetype plugin indent on` and `syntax enable`.
+call plug#end()
+" You can revert the settings after the call like so:
+"   filetype indent off   " Disable file-type-specific indentation
+"   syntax off            " Disable syntax highlighting
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/airblade/vim-gitgutter
-
-" Important commands:
-" :GitGutterToggle
-" :GitGutterSignsToggle
-" :GitGutterLineHighlightsToggle
 
 let g:gitgutter_max_signs = 500
 
@@ -75,22 +107,16 @@ au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Tmux integration
 " https://github.com/christoomey/vim-tmux-navigator
 
-" let g:tmux_navigator_no_mappings = 1
-" let g:tmux_navigator_save_on_switch = 1
-"
-" nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-" nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-" nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-" nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-" nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
+let g:tmux_navigator_no_mappings = 1
+let g:tmux_navigator_save_on_switch = 1
 
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/kien/ctrlp.vim
@@ -108,68 +134,62 @@ set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe " Windows
 
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
+  \ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg|html)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
 
 " Make Ctrl-P a lot faster for Git projects
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-let g:ctrlp_use_caching = 0
+" Yields Command not found error
+" let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+" let g:ctrlp_use_caching = 0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/vim-pandoc/vim-pandoc
 " https://github.com/vim-pandoc/vim-pandoc-syntax
 " https://github.com/vim-pandoc/vim-pandoc/blob/master/doc/pandoc.txt
-"
-" https://github.com/vim-pandoc/vim-pandoc-after.git
-" https://github.com/Konfekt/FastFold.git
 
 " Set default for spell checking
 let g:pandoc#spell#enabled = 1
-let g:pandoc#spell#default_langs = [ 'de', 'en' ]
+let g:pandoc#spell#default_langs = [ 'en' ]
 
-let g:pandoc#syntax#conceal#use = 0
+" Use FastFold instead
+" let g:pandoc#modules#disabled = ['folding']
+let g:pandoc#pandoc#folding#fastfolds = 1
 
-" To avoid the continuous recomputation of folds, in particular in insert mode,
-" defer it to the switches between insert and normal mode.
-" let g:pandoc#folding#fastfolds = 1
-" let g:pandoc#folding#fold_yaml = 1
-" let g:pandoc#folding#level = 1
-" let g:pandoc#folding#mode = 'syntax' " syntax, stacked, relative
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/vim-pandoc/vim-pandoc-after.git
+" Handles vim-pandoc's integration with third-party plugins.
 
-let g:pandoc#modules#disabled = ['folding']
+let g:pandoc#after#modules#enabled = ["ultisnips"]
+" let g:pandoc#after#modules#enabled = ["fastfold", "ultisnips"]
 
-" very old repo, does it work?
-let g:pandoc#after#modules#enabled = ["fastfold", "ultisnips"]
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/Konfekt/FastFold.git
 
-" FastFold
-nmap zuz <Plug>(FastFoldUpdate)
-let g:fastfold_savehook = 1
-let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
-let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
-
-let g:fastfold_force = 1 "To prevent all fold methods
-let g:markdown_folding = 1
-let g:tex_fold_enabled = 1
-let g:vimsyn_folding = 'af'
-let g:xml_syntax_folding = 1
-"let g:javaScript_fold = 1 " uncommenting this will interrupt markdown/pandoc fold
-let g:sh_fold_enabled= 7
-let g:ruby_fold = 1
-let g:perl_fold = 1
-let g:perl_fold_blocks = 1
-let g:r_syntax_folding = 1
-let g:rust_fold = 1
-let g:php_folding = 1
-
-autocmd FileType pandoc
-      \ if exists('#EnableFastFolds') |
-      \   autocmd! EnableFastFolds |
-      \   augroup! EnableFastFolds |
-      \ endif
-
-" au BufNewFile,BufRead *.md set filetype=pandoc
-" au BufNewFile,BufRead *.md set syntax=pandoc
+" nmap zuz <Plug>(FastFoldUpdate)
+" let g:fastfold_savehook = 1
+" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+" let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+"
+" let g:fastfold_force = 1 "To prevent all fold methods
+" let g:markdown_folding = 1
+" let g:tex_fold_enabled = 1
+" let g:vimsyn_folding = 'af'
+" let g:xml_syntax_folding = 1
+" "let g:javaScript_fold = 1 " uncommenting this will interrupt markdown/pandoc fold
+" let g:sh_fold_enabled= 7
+" let g:ruby_fold = 1
+" let g:perl_fold = 1
+" let g:perl_fold_blocks = 1
+" let g:r_syntax_folding = 1
+" let g:rust_fold = 1
+" let g:php_folding = 1
+"
+" autocmd FileType pandoc
+"       \ if exists('#EnableFastFolds') |
+"       \   autocmd! EnableFastFolds |
+"       \   augroup! EnableFastFolds |
+"       \ endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/preservim/nerdtree
@@ -200,37 +220,6 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" https://github.com/vim-latex/vim-latex
-
-" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
-" 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
-" The following changes the default filetype back to 'tex':
-let g:tex_flavor='latex'
-
-" Disable auto-replacement of " to `` or ''
-let g:Tex_SmartKeyQuote=0
-
-let g:tex_conceal = ""
-
-" http://vim-latex.sourceforge.net/documentation/latex-suite.html#latex-folding
-let g:Tex_FoldedSections="part,chapter,section,subsection,subsubsection,paragraph"
-let g:Tex_FoldedMisc=""
-
-" TIP: if you write your \label's as \label{fig:something}, then if you
-" type in \ref{fig: and press <C-n> you will automatically cycle through
-" all the figure labels. Very useful!
-set iskeyword+=:
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" https://github.com/tpope/vim-surround
-
-" ysiwb to surround with double *'s
-let b:surround_{char2nr('b')} = "**\r**"
-let b:surround_{char2nr('i')} = "*\r*"
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " https://github.com/vim-syntastic/syntastic.git
 
@@ -245,54 +234,33 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_yaml_checkers = [ "yamllint" ]
 " let g:syntastic_quiet_messages = { "type": "style" }
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" https://github.com/xolox/vim-notes
+
+" let g:notes_directories = ['~/Documents/Notes']
+" let g:notes_suffix = '.txt'
+" let g:notes_smart_quotes = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Misc
+
+set nocompatible " be iMproved, required
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color
-" https://github.com/altercation/vim-colors-solarized
-" (needs ~/.vim/colors/solarized.vim)
-
-" Makes the colorscheme work on terminals with transparent background, such as Blink.
-let g:solarized_termtrans=1
 
 syntax enable " Enable sytnax highlighting
 
 autocmd BufNewFile,BufRead *.pl set syntax=prolog
 autocmd BufNewFile,BufRead *.md set syntax=pandoc
 
+" set Vim-specific sequences for RGB colors
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
 set background=dark
-colorscheme solarized
-
-" Fix git-gutter's sign column contrast issue with dark solarized
-highlight clear SignColumn
-
-" Get rid of vertical split lines
-hi vertsplit ctermbg=NONE ctermfg=black term=NONE guifg=black guibg=NONE
-
-" Make the 81st column stand out
-" For dark color scheme:
-highlight ColorColumn ctermbg=8
-call matchadd('ColorColumn', '\%81v', 100)
-" " For light color scheme:
-" highlight ColorColumn ctermbg=7
-" call matchadd('ColorColumn', '\%81v', 0)
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" https://github.com/Yggdroot/indentLine
-" Slow!
-
-" " let g:indentLine_char = '▏' " '⦙'
-" let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" https://github.com/xolox/vim-notes
-
-let g:notes_directories = ['~/Documents/Notes']
-let g:notes_suffix = '.txt'
-let g:notes_smart_quotes = 0
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Misc
-
-set nocompatible " be iMproved, required
+autocmd vimenter * ++nested colorscheme solarized8_flat
 
 " Enable file type detection
 filetype plugin on
@@ -330,6 +298,8 @@ set autoindent
 set backspace=indent,eol,start
 set indentexpr= " hopefully disables annoying auto-indent after carriage+return
 set copyindent
+
+" Tab behaviour
 set expandtab " always uses spaces instead of tab characters
 set shiftround
 set shiftwidth=2
@@ -337,24 +307,32 @@ set smarttab " make tab insert indents instead of tabs at the beginning of a lin
 set softtabstop=2
 set tabstop=2
 
+" Tab behaviour per file type
 autocmd FileType make setlocal noexpandtab
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentexpr=
 autocmd FileType tex setlocal ts=2 sts=2 sw=2 expandtab
 
+" Visualize tabs
+set list
+set listchars=tab:▷▷⋮
+
 " Remove trailing whitespaces at write
 autocmd BufWritePre * :%s/\s\+$//e
 
-" keep visual selection when reindenting
+" Keep visual selection when reindenting
 xnoremap > >gv
 xnoremap < <gv
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " User interface
+"
+" Visualize leading spaces
+highlight LeadingWhitespaces ctermbg=Black
+match LeadingWhitespaces /^\s\s*/
 
-" set cursorline " highlight current line
+set cursorline " highlight current line
 set laststatus=2 " make status line appear even without split
 set noerrorbells " don't beep
-" set noshowmode " disable default mode indicator
 set number " show line numbers
 set showmatch " highlight matching [{()}]
 set title " change the terminal's title
@@ -365,10 +343,10 @@ set wildmenu " visual autocomplete for command menu
 " Folding
 
 set foldcolumn=0
-set foldenable " enable folding
-set foldlevelstart=10 " open most folds by default
-set foldnestmax=10 " 10 nested fold max
-" set foldmethod=indent " fold based on indent level
+set foldenable
+set foldlevelstart=1
+set foldnestmax=10
+set foldmethod=syntax
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Search & Replace
@@ -383,22 +361,15 @@ nmap <silent> <leader>/ :noh<CR>
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Disable arrow keys and pageup/pagedown keys
+" Resize panes
 
-" nnoremap <up> <nop>
-" nnoremap <down> <nop>
-" nnoremap <left> <nop>
-" nnoremap <right> <nop>
-"
-" inoremap <up> <nop>
-" inoremap <down> <nop>
-" inoremap <left> <nop>
-" inoremap <right> <nop>
-"
-" vnoremap <up> <nop>
-" vnoremap <down> <nop>
-" vnoremap <left> <nop>
-" vnoremap <right> <nop>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Disable pageup/pagedown keys
 
 nnoremap <pageup> <nop>
 nnoremap <pagedown> <nop>

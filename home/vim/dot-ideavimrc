@@ -10,6 +10,9 @@ set exchange
 
 """ Common settings -------------------------
 
+set clipboard=unnamed
+set clipboard+=ideaput
+
 " Show current mode
 set showmode
 
