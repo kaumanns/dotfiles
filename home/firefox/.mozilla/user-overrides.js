@@ -3,8 +3,6 @@
 user_pref("browser.sessionstore.interval", 3600000); // Reduce SSD writes
 user_pref("browser.sessionstore.resume_from_crash", false);
 
-user_pref("mousewheel.default.delta_multiplier_y",-100); // Enable natural scrolling
-
 // user_pref("layout.css.devPixelsPerPx", 1.3); // 1.3 for 4K, -1.0 for FHD
 
 user_pref("keyword.enabled", true); // Allow url bar to interpret input as search
@@ -28,3 +26,18 @@ user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true); // Enabl
 user_pref("browser.uidensity", 1); // Make UI chrome denser
 
 user_pref("identity.fxaccounts.enabled", true); // Firefox Accounts & Sync [FF60+] [RESTART]
+
+ * [SETTING] Privacy & Security>History>Custom Settings>Clear history when Firefox closes | Settings ***/
+user_pref("privacy.sanitize.sanitizeOnShutdown", false);
+
+/** SANITIZE ON SHUTDOWN: IGNORES "ALLOW" SITE EXCEPTIONS ***/
+/* 2811: set/enforce what items to clear on shutdown (if 2810 is true) [SETUP-CHROME]
+ * [NOTE] If "history" is true, downloads will also be cleared
+ * [NOTE] "sessions": Active Logins: refers to HTTP Basic Authentication [1], not logins via cookies
+ * [1] https://en.wikipedia.org/wiki/Basic_access_authentication ***/
+// user_pref("privacy.clearOnShutdown.cache", true);     // [DEFAULT: true]
+// user_pref("privacy.clearOnShutdown.downloads", true); // [DEFAULT: true]
+// user_pref("privacy.clearOnShutdown.formdata", true);  // [DEFAULT: true]
+user_pref("privacy.clearOnShutdown.history", false);   // [DEFAULT: true]
+// user_pref("privacy.clearOnShutdown.sessions", true);  // [DEFAULT: true]
+
