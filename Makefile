@@ -29,17 +29,22 @@ STOW_DIR := home
 
 dirs = $(shell ls $(1))
 
-OS_NAME := $(patsubst NAME=%,%,$(shell cat /etc/*-release | grep "^NAME="))
+# OS_NAME := $(patsubst NAME=%,%,$(shell cat /etc/*-release | grep "^NAME="))
+OS_NAME := $(shell uname)
 
 ifeq ($(OS_NAME), "Arch Linux")
 	package-install = pacman -Q | grep "^$1 " || sudo pacman --needed --noconfirm --upgrade --refresh--sync $1
 else ifeq  ($(OS_NAME), "Debian")
 	package-install = sudo apt install -y $1
+else ifeq  ($(OS_NAME), "Darwin")
+	package-install = brew install
 endif
 
 pip-install = $(PIP) install --upgrade --user $(1)
 
-stow = $(STOW) --restow --verbose 1 --dotfiles --dir $(STOW_DIR) --target $(1) $(2)
+git-clone = [[ -z $(2) ]] && git clone $(1) $(2)
+
+# stow = $(STOW) --restow --verbose 1 --dotfiles --dir $(STOW_DIR) --target $(1) $(2)
 
 STOW_SUBDIRS = $(call dirs,$(STOW_DIR))
 
@@ -113,6 +118,7 @@ $1.setup: $$($1.prerequisites) | $$($1.order-only-prerequisites)
 $1: $$($1.target)
 
 endef
+# $(foreach dir,$(STOW_SUBDIRS),$(info $(call stow_template,$(dir))))
 $(foreach dir,$(STOW_SUBDIRS),$(eval $(call stow_template,$(dir))))
 
 %.setup:

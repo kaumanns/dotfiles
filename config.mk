@@ -49,6 +49,8 @@ endef
 ################################################################################
 # vim
 
+VIM_CONFIG_DIR = $(HOME)/.vim
+
 vim.target := $(HOME)/.vimrc
 
 vim.package-dependencies := neovim $(vim.youcompleteme.package-dependencies)
@@ -57,26 +59,43 @@ vim.pip-dependencies := neovim yamllint
 
 # define vim.setup-recipe
 define vim.setup-recipe
-cd $(HOME)/.vim/pack/plugins/start/YouCompleteMe \
+cd $(VIM_CONFIG_DIR)/plugged/YouCompleteMe \
 	&& ./install.py \
 		--clang-completer \
 		--system-libclang;
+curl -fLo $(VIM_CONFIG_DIR)/autoload/plug.vim --create-dirs \
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endef
 
 ################################################################################
 # Firefox
 
-firefox.target =  $(HOME).mozilla/user-overrides.js
+ifeq ($(OS_NAME),Darwin)
+	HOME = $(shell echo $$HOME)/Library/Application\ Support/Firefox
+	FIREFOX_PROFILES_HOME = $(HOME)/Profiles
+else
+	FIREFOX_PROFILES_HOME = $(HOME)/.mozilla/firefox
+endif
+
+FIREFOX_USERJS_HOME = $(FIREFOX_PROFILE_HOME)/user.js
+
+firefox.target = "$(FIREFOX_PROFILES_HOME)/user-overrides.js"
+firefox-macos.target = $(firefox.target)
 
 firefox.package-dependencies = firefox
+firefox-macos.package-dependencies = $(firefox.package-dependencies)
 
 # Update hardened user.js from repo and apply user overrides.
 define firefox.setup-recipe
-$(HOME)/.mozilla/user.js/updater.sh \
+$(call git-clone,https://github.com/arkenfox/user.js.git,$(FIREFOX_USERJS_HOME))
+
+$(FIREFOX_USERJS_HOME)/updater.sh \
 	-s \
-	-o $(HOME)/.mozilla/user-overrides.js \
-	-p $(HOME)/.mozilla/firefox/*default-release
+	-o $(FIREFOX_PROFILES_HOME)/user-overrides.js \
+	-p "$(wildcard $(FIREFOX_PROFILES_HOME)/*default-release)"
 endef
+
+firefox-macos.setup-recipe = $(firefox.setup-recipe)
 
 ################################################################################\
 # mutt
@@ -175,11 +194,24 @@ export EXTRA_LDFLAGS="-lssl -lcrypto" \
 endef
 
 ################################################################################
+# tmux
+
+tmux.package-dependencies := tmux
+
+define tmux.setup-recipes
+git clone https://github.com/tmux-plugins/tpm $(HOME)/.tmux/plugins/tpm
+endef
+
+################################################################################
 # hosts
+
+HOSTS_GIT_DIR = $(HOME)/.config/hosts/hosts
 
 hosts.target = $(HOME)/.config/hosts/update_hosts.sh
 
 define hosts.setup-recipe
+$(call git-clone,https://github.com/arkenfox/user.js.git,$(HOSTS_GIT_DIR));
+
 $(HOME)/.config/hosts/update_hosts.sh -l "$(dir $(hosts.target))"
 endef
 
@@ -195,8 +227,6 @@ fonts.setup-recipe = fc-cache -v -f;
 X.package-dependencies := rxvt-unicode
 
 ranger.package-dependencies := ranger
-
-tmux.package-dependencies := tmux
 
 dircolors.pip-dependencies := dircolors
 
