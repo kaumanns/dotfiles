@@ -1,0 +1,9 @@
+- /.local/***
+- /.cache/***
+- /.keras/***
+- /.wine/***
+- /.cargo/***
+- /.config/***
+- /.gradle/***
+- /.env/***
+
