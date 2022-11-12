@@ -146,7 +146,7 @@ function tm {
     tmux attach -t "$1" || tmux new -s "$1";
 }
 
-eval `dircolors $HOME/.dircolors/dircolors.256dark`
+eval `gdircolors $HOME/.dircolors/dircolors.256dark`
 
 # Enable Tor
 #. torsocks on
@@ -158,6 +158,16 @@ if [[ "$UNAME" == "Darwin" ]]; then
     # Homebrew
     export HOMEBREW_NO_ANALYTICS=1
 
+    # Enable colors for ls
+    if whence dircolors >/dev/null; then
+      eval "$(dircolors -b)"
+      zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+      alias ls='ls --color'
+    else
+      export CLICOLOR=1
+      zstyle ':completion:*:default' list-colors ''
+    fi
+
     # Use GNU utils (install with brew install coreutils)
     # Without these paths, one would have to prefix all GNU commands with 'g'.
     export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
@@ -165,6 +175,11 @@ if [[ "$UNAME" == "Darwin" ]]; then
 
     # Prolog
     export PATH="/Applications/SWI-Prolog.app/Contents/MacOS:$PATH"
+
+    # C++
+    export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+    export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+    export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 
     # GPG agent
     # From https://blog.chendry.org/2015/03/13/starting-gpg-agent-in-osx.html:
