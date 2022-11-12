@@ -1,15 +1,6 @@
-[submodule "home/fonts/dot-fonts/source-code-pro"]
-	path = home/fonts/dot-fonts/source-code-pro
-	url = https://github.com/adobe-fonts/source-code-pro.git
 [submodule "home/st/.config/st/st"]
 	path = home/st/.config/st/st
 	url = https://git.suckless.org/st
-[submodule "home/hosts/.config/hosts/hosts"]
-	path = home/hosts/.config/hosts/hosts
-	url = https://github.com/StevenBlack/hosts.git
-[submodule "home/firefox/.mozilla/user.js"]
-	path = home/firefox/.mozilla/user.js
-	url = https://github.com/arkenfox/user.js.git
 [submodule "tools/snapshot"]
 	path = tools/snapshot
 	url = https://github.com/kaumanns/snapshot.git
